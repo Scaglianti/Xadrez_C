@@ -160,9 +160,9 @@ int vertical(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //Leitura da vertical para baixo
     if(lin_ori<lin_des)
     {
-        for(int i=lin_ori+1;i<lin_des;i++)
+        for(int i=lin_ori+1;i<lin_des+1;i++)
         {
-            if(tab[i*8+lin_ori]>1)
+            if(tab[i*8+col_ori]>1)
             {
                 bool = false;
             }
@@ -174,9 +174,44 @@ int vertical(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //Leitura da vertical para cima
     else
     {
-        for(int i=lin_ori-1;i>lin_des;i--)
+        for(int i=lin_ori-1;i>lin_des+1;i--)
         {
-            if(tab[i*8+lin_ori]>1)
+            if(tab[i*8+col_ori]>1)
+            {
+                bool = false;
+            }
+            else
+                bool = true;
+        }
+    }
+
+    return bool;
+}
+int horizontal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+{
+    //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
+    int bool;
+
+    //Leitura da horizontal para direita
+    if(col_ori<col_des)
+    {
+        for(int i=col_ori+1;i<col_des-1;i++)
+        {
+            if(tab[lin_ori*8+i]>1)
+            {
+                bool = false;
+            }
+            else
+            bool = true;
+        }
+    }
+
+    //Leitura da horizontal para esquerda
+    else
+    {
+        for(int i=col_ori-1;i>col_des+1;i--)
+        {
+            if(tab[lin_ori*8+i]>1)
             {
                 bool = false;
             }

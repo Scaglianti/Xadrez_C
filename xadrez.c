@@ -195,14 +195,14 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //ler as diagonais para baixo
     if(lin_ori < lin_des)
     {
-        for(int i=lin_ori;i<lin_des;i++)
+        for(int i=lin_ori+1;i<lin_des;i++)
         {
             //ler as diagonais da direita
             if(col_ori < col_des)
             {
                 for(int j=col_ori;j<col_des;j++)
                 {
-                    if(tab[(i+1)*8+(j+1)]>1)
+                    if(tab[i*8+(j+1)]>1)
                     {
                         bool = false;
                     }
@@ -216,7 +216,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
             {
                 for(int j=col_ori;j<col_des;j--)
                 {
-                    if(tab[(i-1)*8+(j-1)]>1)
+                    if(tab[i*8+(j-1)]>1)
                     {
                         bool = false;
                     }
@@ -230,14 +230,14 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //Ler as diagonais para cima
     else
     {
-        for(int i=lin_ori;i<lin_des;i++)
+        for(int i=lin_ori-1;i<lin_des;i++)
         {
             //Ler as diagonais da direita
             if(col_ori < col_des)
             {
                 for(int j=col_ori;j<col_des;j++)
                 {
-                    if(tab[(i+1)*8+(j+1)]>1)
+                    if(tab[i*8+(j+1)]>1)
                     {
                         bool = false;
                     }
@@ -251,7 +251,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
             {
                 for(int j=col_ori;j<col_des;j--)
                 {
-                    if(tab[(i-1)*8+(j-1)]>1)
+                    if(tab[i*8+(j-1)]>1)
                     {
                         bool = false;
                     }

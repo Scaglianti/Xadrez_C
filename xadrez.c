@@ -57,7 +57,7 @@ void imprimirtabuleiro(int *pecas)
     //Ler o tabuleiro e substituir pelo caractere correspondente
     for(int i=0;i<8;i++)
     {
-        printf("%d ", i);
+        printf("%d ", 8-i);
         for(int j=0;j<8;j++)
         {
             switch(pecas[i*8+j])
@@ -110,8 +110,7 @@ void imprimirtabuleiro(int *pecas)
         }
         printf("\n");
     }
-    //printf("  a b c d e f g h \n");
-    printf("  0 1 2 3 4 5 6 7 \n");
+    printf("  a b c d e f g h \n");
 }
 int *criartabuleiro()
 {
@@ -153,14 +152,52 @@ int *criartabuleiro()
     free(pecas_numericas);
     
 }
-int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+int vertical(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
 {
+    //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
     int bool;
 
+    //Leitura da vertical para baixo
+    if(lin_ori<lin_des)
+    {
+        for(int i=lin_ori+1;i<lin_des;i++)
+        {
+            if(tab[i*8+lin_ori]>1)
+            {
+                bool = false;
+            }
+            else
+            bool = true;
+        }
+    }
+
+    //Leitura da vertical para cima
+    else
+    {
+        for(int i=lin_ori-1;i>lin_des;i--)
+        {
+            if(tab[i*8+lin_ori]>1)
+            {
+                bool = false;
+            }
+            else
+                bool = true;
+        }
+    }
+
+    return bool;
+}
+int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+{
+    //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
+    int bool;
+
+    //ler as diagonais para baixo
     if(lin_ori < lin_des)
     {
         for(int i=lin_ori;i<lin_des;i++)
         {
+            //ler as diagonais da direita
             if(col_ori < col_des)
             {
                 for(int j=col_ori;j<col_des;j++)
@@ -173,6 +210,8 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                     bool = true;
                 }
             }
+
+            //ler as diagonais da esquerda
             else
             {
                 for(int j=col_ori;j<col_des;j--)
@@ -187,10 +226,13 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
             }
         }
     }
+
+    //Ler as diagonais para cima
     else
     {
         for(int i=lin_ori;i<lin_des;i++)
         {
+            //Ler as diagonais da direita
             if(col_ori < col_des)
             {
                 for(int j=col_ori;j<col_des;j++)
@@ -203,6 +245,8 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                     bool = true;
                 }
             }
+
+            //Ler as diagonais da esquerda
             else
             {
                 for(int j=col_ori;j<col_des;j--)
@@ -219,7 +263,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
         
     }
 
-    
+    return bool;
 }
 void lermovimento(int *val_col,int *val_lin)
 {

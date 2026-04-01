@@ -230,7 +230,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //ler as diagonais para baixo
     if(lin_ori < lin_des)
     {
-        for(int i=lin_ori+1;i<lin_des;i++)
+        for(int i=lin_ori+1;i<lin_des-1;i++)
         {
             //ler as diagonais da direita
             if(col_ori < col_des)
@@ -265,7 +265,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //Ler as diagonais para cima
     else
     {
-        for(int i=lin_ori-1;i<lin_des;i++)
+        for(int i=lin_ori-1;i<lin_des+1;i++)
         {
             //Ler as diagonais da direita
             if(col_ori < col_des)

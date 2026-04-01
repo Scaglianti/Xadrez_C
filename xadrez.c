@@ -57,7 +57,7 @@ void imprimirtabuleiro(int *pecas)
     //Ler o tabuleiro e substituir pelo caractere correspondente
     for(int i=0;i<8;i++)
     {
-        printf("%d ", 8-i);
+        printf("%d ", i);
         for(int j=0;j<8;j++)
         {
             switch(pecas[i*8+j])
@@ -110,7 +110,8 @@ void imprimirtabuleiro(int *pecas)
         }
         printf("\n");
     }
-    printf("  a b c d e f g h \n");
+    //printf("  a b c d e f g h \n");
+    printf("  0 1 2 3 4 5 6 7 \n");
 }
 int *criartabuleiro()
 {
@@ -150,6 +151,74 @@ int *criartabuleiro()
 
     return pecas_numericas;
     free(pecas_numericas);
+    
+}
+int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+{
+    int bool;
+
+    if(lin_ori < lin_des)
+    {
+        for(int i=lin_ori;i<lin_des;i++)
+        {
+            if(col_ori < col_des)
+            {
+                for(int j=col_ori;j<col_des;j++)
+                {
+                    if(tab[(i+1)*8+(j+1)]>1)
+                    {
+                        bool = false;
+                    }
+                    else
+                    bool = true;
+                }
+            }
+            else
+            {
+                for(int j=col_ori;j<col_des;j--)
+                {
+                    if(tab[(i-1)*8+(j-1)]>1)
+                    {
+                        bool = false;
+                    }
+                    else
+                    bool = true;
+                }
+            }
+        }
+    }
+    else
+    {
+        for(int i=lin_ori;i<lin_des;i++)
+        {
+            if(col_ori < col_des)
+            {
+                for(int j=col_ori;j<col_des;j++)
+                {
+                    if(tab[(i+1)*8+(j+1)]>1)
+                    {
+                        bool = false;
+                    }
+                    else
+                    bool = true;
+                }
+            }
+            else
+            {
+                for(int j=col_ori;j<col_des;j--)
+                {
+                    if(tab[(i-1)*8+(j-1)]>1)
+                    {
+                        bool = false;
+                    }
+                    else
+                    bool = true;
+                }
+            }
+        }
+        
+    }
+
     
 }
 void lermovimento(int *val_col,int *val_lin)

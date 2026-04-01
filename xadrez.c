@@ -152,46 +152,32 @@ int *criartabuleiro()
     free(pecas_numericas);
     
 }
-int vertical(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+void lermovimento(int *val_col,int *val_lin)
 {
-    //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
-    int bool;
+    //Ler a notação escrita e transformar na posição correspondente no tabuleiro
+    int bool = true;
+    char notacao[3];
 
-    //Leitura da vertical para baixo
-    if(lin_ori<lin_des)
+    while(bool)
     {
-        for(int i=lin_ori+1;i<lin_des+1;i++)
+        scanf(" %c%c",&notacao[0],&notacao[1]);
+        if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
         {
-            if(tab[i*8+col_ori]>1)
-            {
-                bool = false;
-            }
-            else
-            bool = true;
+            printf("Erro!! Posição invalida, tente novamente.\n");
         }
-    }
-
-    //Leitura da vertical para cima
-    else
-    {
-        for(int i=lin_ori-1;i>lin_des+1;i--)
+        else
         {
-            if(tab[i*8+col_ori]>1)
-            {
-                bool = false;
-            }
-            else
-                bool = true;
+            *val_col = notacao[0]-'a';
+            *val_lin = '8' - notacao[1];
+            bool = false;
         }
-    }
-
-    return bool;
+    };
 }
-int horizontal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
     int bool;
-
+    
     //Leitura da horizontal para direita
     if(col_ori<col_des)
     {
@@ -199,13 +185,13 @@ int horizontal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
         {
             if(tab[lin_ori*8+i]>1)
             {
-                bool = false;
+                return false;
             }
             else
             bool = true;
         }
     }
-
+    
     //Leitura da horizontal para esquerda
     else
     {
@@ -213,7 +199,7 @@ int horizontal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
         {
             if(tab[lin_ori*8+i]>1)
             {
-                bool = false;
+                return false;
             }
             else
                 bool = true;
@@ -226,7 +212,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
 {
     //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
     int bool;
-
+    
     //ler as diagonais para baixo
     if(lin_ori < lin_des)
     {
@@ -239,7 +225,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                 {
                     if(tab[i*8+(j+1)]>1)
                     {
-                        bool = false;
+                        return false;
                     }
                     else
                     bool = true;
@@ -253,7 +239,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                 {
                     if(tab[i*8+(j-1)]>1)
                     {
-                        bool = false;
+                        return false;
                     }
                     else
                     bool = true;
@@ -274,7 +260,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                 {
                     if(tab[i*8+(j+1)]>1)
                     {
-                        bool = false;
+                        return false;
                     }
                     else
                     bool = true;
@@ -288,7 +274,7 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                 {
                     if(tab[i*8+(j-1)]>1)
                     {
-                        bool = false;
+                        return false;
                     }
                     else
                     bool = true;
@@ -300,26 +286,40 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
 
     return bool;
 }
-void lermovimento(int *val_col,int *val_lin)
+int vertical(int lin_ori, int col_ori, int lin_des, int *tab)
 {
-    //Ler a notação escrita e transformar na posição correspondente no tabuleiro
-    int bool = true;
-    char notacao[3];
+    //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
+    int bool;
 
-    while(bool)
+    //Leitura da vertical para baixo
+    if(lin_ori<lin_des)
     {
-    scanf(" %c%c",&notacao[0],&notacao[1]);
-    if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
-    {
-        printf("Erro!! Posição invalida, tente novamente.\n");
+        for(int i=lin_ori+1;i<lin_des-1;i++)
+        {
+            if(tab[i*8+col_ori]>1)
+            {
+                return false;
+            }
+            else
+            bool = true;
+        }
     }
+
+    //Leitura da vertical para cima
     else
     {
-    *val_col = notacao[0]-'a';
-    *val_lin = '8' - notacao[1];
-    bool = false;
+        for(int i=lin_ori-1;i>lin_des+1;i--)
+        {
+            if(tab[i*8+col_ori]>1)
+            {
+                return false;
+            }
+            else
+                bool = true;
+        }
     }
-    };
+
+    return bool;
 }
 int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *tabuleiro)
 {
@@ -335,24 +335,21 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         {
             bool = true;
         }
-        else if(lin_ori == 6)
+        else if(lin_ori == 6 && col_ori == col_des)
         {
-            if((lin_des == 5 || lin_des == 4) && col_ori == col_des)
+            if((lin_des == 5))
+            {
+                bool = true;
+            }
+            else if((!vertical(lin_ori,col_ori,4,tabuleiro)))
             {
                 bool = true;
             }
             else
+            {
                 bool = false;
+            }
         }
-        else if(lin_des == lin_ori - 1)
-            {
-                bool = true;
-            }
-            else
-                bool = false;
-        
-            
-        
         break;
         case cavaloB:
 

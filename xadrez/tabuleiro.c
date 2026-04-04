@@ -1,41 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
+#include <stdbool.h>
+#include "tabuleiro.h"
 
-/*
-Quadrado Preto  -> ◻    - 0
-Quadrado Branco -> ◼    - 1
-Peão            -> ♙ ♟ - 2 3
-Cavalo          -> ♘ ♞ - 4 5
-Bispo           -> ♗ ♝ - 6 7 
-Torre           -> ♖ ♜ - 8 9
-Rainha          -> ♕ ♛ - 10 11
-Rei             -> ♔ ♚ - 12 13
-*/
-
-enum bool
-{
-    false,
-    true
-};
-enum pecas
-{
-    //Enumerar as peças
-    quadradoB,
-    quadradoP,
-    peaoB,
-    cavaloB,
-    bispoB,
-    torreB,
-    rainhaB,
-    reiB,
-    peaoP,
-    cavaloP,
-    bispoP,
-    torreP,
-    rainhaP,
-    reiP
-};
 int cores(int col,int lin)
 {
     //Função criada para identificar cada cor do tabuleiro (Preto e Branco) e repor (caso necessário) após o movimento
@@ -149,34 +116,12 @@ int *criartabuleiro()
     pecas_numericas[7*8+4] = reiB;
 
     return pecas_numericas;
-    free(pecas_numericas);
-    
 }
-void lermovimento(int *val_col,int *val_lin)
-{
-    //Ler a notação escrita e transformar na posição correspondente no tabuleiro
-    int bool = true;
-    char notacao[3];
 
-    while(bool)
-    {
-        scanf(" %c%c",&notacao[0],&notacao[1]);
-        if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
-        {
-            printf("Erro!! Posição invalida, tente novamente.\n");
-        }
-        else
-        {
-            *val_col = notacao[0]-'a';
-            *val_lin = '8' - notacao[1];
-            bool = false;
-        }
-    };
-}
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
-    int bool;
+    bool validar = false;
     
     //Leitura da horizontal para direita
     if(col_ori<col_des)
@@ -188,7 +133,7 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
                 return false;
             }
             else
-            bool = true;
+            validar = true;
         }
     }
     
@@ -202,16 +147,16 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
                 return false;
             }
             else
-                bool = true;
+                validar = true;
         }
     }
 
-    return bool;
+    return validar;
 }
 int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
 {
     //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
-    int bool;
+    bool validar = false;
     
     //ler as diagonais para baixo
     if(lin_ori < lin_des)
@@ -228,21 +173,21 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                         return false;
                     }
                     else
-                    bool = true;
+                    validar = true;
                 }
             }
 
             //ler as diagonais da esquerda
             else
             {
-                for(int j=col_ori;j<col_des;j--)
+                for(int j=col_ori;j>col_des;j--)
                 {
                     if(tab[i*8+(j-1)]>1)
                     {
                         return false;
                     }
                     else
-                    bool = true;
+                    validar = true;
                 }
             }
         }
@@ -263,96 +208,112 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
                         return false;
                     }
                     else
-                    bool = true;
+                    validar = true;
                 }
             }
 
             //Ler as diagonais da esquerda
             else
             {
-                for(int j=col_ori;j<col_des;j--)
+                for(int j=col_ori;j>col_des;j--)
                 {
                     if(tab[i*8+(j-1)]>1)
                     {
                         return false;
                     }
                     else
-                    bool = true;
+                    validar = true;
                 }
             }
         }
         
     }
 
-    return bool;
+    return validar;
 }
 int vertical(int lin_ori, int col_ori, int lin_des, int *tab)
 {
     //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
-    int bool;
+    bool validar = false;
 
     //Leitura da vertical para baixo
     if(lin_ori<lin_des)
     {
-        for(int i=lin_ori+1;i<lin_des-1;i++)
+        for(int i=lin_ori+1;i<lin_des;i++)
         {
             if(tab[i*8+col_ori]>1)
             {
                 return false;
             }
             else
-            bool = true;
+            validar = true;
         }
     }
 
     //Leitura da vertical para cima
     else
     {
-        for(int i=lin_ori-1;i>lin_des+1;i--)
+        for(int i=lin_ori-1;i>lin_des;i--)
         {
             if(tab[i*8+col_ori]>1)
             {
                 return false;
             }
             else
-                bool = true;
+                validar = true;
         }
     }
 
-    return bool;
+    return validar;
 }
 int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *tabuleiro)
 {
-    int bool=true;
+    bool validar;
 
     switch(peca)
     {
         case peaoP:
-        
-        break;
-        case peaoB:
-        if(lin_des == (lin_ori-1) && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
+        if(lin_des == lin_ori+1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]<8 && tabuleiro[lin_des*8+col_des]>1)
         {
-            bool = true;
+            validar = true;
         }
-        else if(lin_ori == 6 && col_ori == col_des)
+        else if(col_ori == col_des && lin_des == lin_ori+1 && tabuleiro[lin_des*8+col_des]<=1)
         {
-            if((lin_des == 5))
-            {
-                bool = true;
-            }
-            else if((!vertical(lin_ori,col_ori,4,tabuleiro)))
-            {
-                bool = true;
-            }
-            else
-            {
-                bool = false;
-            }
+            validar = true;
+        }
+        else if(lin_ori == 1 && col_ori == col_des && lin_des == 3 && tabuleiro[2*8+col_ori] <= 1 && tabuleiro[3*8+col_ori] <= 1)
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
         }
         break;
-        case cavaloB:
 
+
+        case peaoB:
+        if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
+        {
+            validar = true;
+        }
+        else if(col_ori == col_des && lin_des == lin_ori-1 && tabuleiro[lin_des*8+col_des]<=1)
+        {
+            validar = true;
+        }
+        else if(lin_ori == 6 && col_ori == col_des && lin_des == 4 && tabuleiro[5*8+col_ori] <= 1 && tabuleiro[4*8+col_ori] <= 1)
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
+        }
+        break;
+
+
+        case cavaloB:
+        
         break;
         case cavaloP:
 
@@ -382,15 +343,39 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
 
         break;
     }
-    return bool;
+   
+    return validar;
+}
+
+void lermovimento(int *val_col,int *val_lin)
+{
+    //Ler a notação escrita e transformar na posição correspondente no tabuleiro
+    bool validar = true;
+    char notacao[3];
+
+    while(validar)
+    {
+        scanf(" %c%c",&notacao[0],&notacao[1]);
+        if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
+        {
+            printf("Erro!! Posição invalida, tente novamente.\n");
+        }
+        else
+        {
+            *val_col = notacao[0]-'a';
+            *val_lin = '8' - notacao[1];
+            validar = false;
+        }
+    };
 }
 void movimento(int *tab)
 {
     //Realizar o movimento proposto pelo jogador
     int lin_ori,col_ori,lin_des,col_des;
-    int cor, bool=true;
+    int cor;
+    bool validar = true;
     
-    while(bool)
+    while(validar)
     {
         printf("Informe a casa que você quer andar: ");
         lermovimento(&col_ori,&lin_ori);
@@ -402,11 +387,11 @@ void movimento(int *tab)
             printf("Você não pode movimentar uma casa vazia! Tente novamente.\n");
         }
         else
-        bool = false;
+        validar = false;
     }
 
-    bool=true;
-    while(bool)
+    validar = true;
+    while(validar)
     {
         printf("Informe a casa para onde você quer andar: ");
         lermovimento(&col_des,&lin_des);
@@ -417,8 +402,7 @@ void movimento(int *tab)
             printf("Ação inválida!! Tente novamente.\n");
         }
         else
-        
-        bool = false;
+        validar = false;
     }
     
     cor = cores(col_ori,lin_ori);
@@ -426,31 +410,4 @@ void movimento(int *tab)
     tab[lin_ori*8+col_ori] = cor;
 
     imprimirtabuleiro(tab);
-}
- 
-int main()
-{
-    SetConsoleOutputCP(65001);
-    int bool = true;
-    int rodada = 0;
-    int *tab; 
-    
-    //Fazer as jogadas em loop até ter algum resultado
-    while(bool)
-    {
-        //Se for a primeira rodada (== 0), ele vai iniciar um novo tabuleiro 
-        if(rodada == 0)
-        {    
-            tab = criartabuleiro(); 
-        }
-
-        imprimirtabuleiro(tab);
-        printf("\n\n");
-        printf("Vez do jogador %d fazer seu movimento:\n", (rodada%2)+1);
-        movimento(tab);
-        printf("\n\n");
-        rodada++;
-    }
-    
-    return 0;
 }

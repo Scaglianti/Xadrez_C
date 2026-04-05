@@ -268,7 +268,7 @@ int vertical(int lin_ori, int col_ori, int lin_des, int *tab)
 }
 int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *tabuleiro)
 {
-    bool validar;
+    bool validar = false;
 
     switch(peca)
     {
@@ -290,8 +290,6 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
-
-
         case peaoB:
         if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
         {
@@ -310,8 +308,6 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
-
-
         case cavaloB:
         
         break;
@@ -325,10 +321,158 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
 
         break;
         case torreB:
-
+        //Movimento para baixo
+        if(lin_ori < lin_des && col_ori == col_des)
+        {
+            if(lin_ori + 1 == lin_des && col_ori == col_des && (tabuleiro[lin_des
+            *8+col_des] <= 1 || tabuleiro[lin_des
+            *8+col_des] >= 8))
+            {
+                validar = true;
+            }
+            else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+        //Movimento para cima
+        else if(lin_ori > lin_des && col_ori == col_des)
+        {
+            if(lin_ori-1 == lin_des && col_ori == col_des && (tabuleiro[lin_des
+            *8+col_des] <= 1 || tabuleiro[lin_des
+            *8+col_des] >= 8))
+            {
+                validar = true;
+            }
+            else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //Movimento para direita
+        else if(col_ori < col_des && lin_ori == lin_des)
+        {
+            if(col_ori + 1 == col_des && col_ori == col_des && (tabuleiro[lin_des
+            *8+col_des] <= 1 || tabuleiro[lin_des
+            *8+col_des] >= 8))
+            {
+                validar = true;
+            }
+            else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //Movimento para esquerda
+        else if(col_ori > col_des && lin_ori == lin_des)
+        {
+            if(col_ori - 1 == col_des && col_ori == col_des && (tabuleiro[lin_des
+            *8+col_des] <= 1 || tabuleiro[lin_des
+            *8+col_des] >= 8))
+            {
+                validar = true;
+            }
+            else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        } 
+        else
+        {
+            return false;
+        }
         break;
         case torreP:
-
+        //Movimento para baixo
+        if(lin_ori < lin_des && col_ori == col_des)
+        {
+            if(lin_ori + 1 == lin_des && col_ori == col_des && tabuleiro[lin_des
+            *8+col_des] < 8)
+            {
+                validar = true;
+            }
+            else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+        //Movimento para cima
+        else if(lin_ori > lin_des && col_ori == col_des)
+        {
+            if(lin_ori-1 == lin_des && col_ori == col_des && tabuleiro[lin_des
+            *8+col_des] < 8)
+            {
+                validar = true;
+            }
+            else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //Movimento para direita
+        else if(col_ori < col_des && lin_ori == lin_des)
+        {
+            if(col_ori + 1 == col_des && col_ori == col_des && tabuleiro[lin_des
+            *8+col_des] < 8)
+            {
+                validar = true;
+            }
+            else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //Movimento para esquerda
+        else if(col_ori > col_des && lin_ori == lin_des)
+        {
+            if(col_ori - 1 == col_des && col_ori == col_des && tabuleiro[lin_des
+            *8+col_des] < 8)
+            {
+                validar = true;
+            }
+            else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        } 
+        else
+        {
+            return false;
+        }
         break;
         case rainhaB:
 

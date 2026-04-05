@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "tabuleiro.h"
 #include <stdbool.h>
+#include "tabuleiro.h"
 
 /*
 Quadrado Preto  -> ◻    - 0
 Quadrado Branco -> ◼    - 1
-Peão            -> ♙ ♟ - 2 3
-Cavalo          -> ♘ ♞ - 4 5
-Bispo           -> ♗ ♝ - 6 7 
-Torre           -> ♖ ♜ - 8 9
-Rainha          -> ♕ ♛ - 10 11
-Rei             -> ♔ ♚ - 12 13
+Peão            -> ♙ ♟ - 2 8
+Cavalo          -> ♘ ♞ - 3 9
+Bispo           -> ♗ ♝ - 4 10 
+Torre           -> ♖ ♜ - 5 11
+Rainha          -> ♕ ♛ - 6 12
+Rei             -> ♔ ♚ - 7 13
 */
 
 int main()
@@ -26,7 +26,6 @@ int main()
     while(validar)
     {
         //Se for a primeira rodada (== 0), ele vai iniciar um novo tabuleiro 
-        printf("DEBUG: início do loop, rodada %d\n", rodada);
         if(rodada == 0)
         {    
             tab = criartabuleiro(); 
@@ -36,7 +35,6 @@ int main()
         printf("\n\n");
         printf("Vez do jogador %d fazer seu movimento:\n", (rodada%2)+1);
         movimento(tab);
-        printf("DEBUG: movimento concluído, rodada %d\n", rodada);
         printf("\n\n");
         rodada++;
     }

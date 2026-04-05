@@ -32,7 +32,7 @@ int main()
         }
 
         imprimirtabuleiro(tab);
-        printf("\n\n");
+        printf("\n");
         printf("Vez do jogador %d fazer seu movimento:\n", (rodada%2)+1);
         movimento(tab);
         printf("\n\n");

@@ -117,61 +117,50 @@ int *criartabuleiro()
 
     return pecas_numericas;
 }
+
 int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
 {
     //Movimento para baixo e esquerda
     if(lin_ori < lin_des && col_ori < col_des)
     {
-        for(int i = lin_des;i>=lin_ori;i--)
+        for(int i = lin_des, j = col_des;i>=lin_ori && j>=col_ori;i--,j--)
         {
-            for(int j = col_des;j>=col_ori;j--)
+            if(i == lin_ori && j == col_ori)
             {
-                if(i == lin_ori && j == col_ori)
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
     //Movimento para baixo e direita
     else if(lin_ori < lin_des && col_ori > col_des)
     {
-        for(int i = lin_des;i>=lin_ori;i--)
+        for(int i = lin_des, j = col_des;i>=lin_ori && j<=col_ori;i--,j++)
         {
-            for(int j = col_des;j<=col_ori;j++)
+            if(i == lin_ori && j == col_ori)
             {
-                if(i == lin_ori && j == col_ori)
-                {
-                    return true;
-                }
+                return true;
             }
         }
-    }
+    }   
     //Movimento para cima e direita
     else if(lin_ori > lin_des && col_ori < col_des)
     {
-        for(int i = lin_des;i<=lin_ori;i++)
+        for(int i = lin_des, j = col_des;i<=lin_ori && j>=col_ori;i++,j--)
         {
-            for(int j = col_des;j>=col_ori;j--)
+            if(i == lin_ori && j == col_ori)
             {
-                if(i == lin_ori && j == col_ori)
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
     //Movimento para cima e esquerda
     else if(lin_ori > lin_des && col_ori > col_des)
     {
-        for(int i = lin_des;i<=lin_ori;i++)
+        for(int i = lin_des, j = col_des;i<=lin_ori && j<=col_ori;i++,j++)
         {
-            for(int j = col_des;j<=col_ori;j++)
+            if(i == lin_ori && j == col_ori)
             {
-                if(i == lin_ori && j == col_ori)
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
@@ -210,10 +199,10 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
                 return false;
             }
             else
-                validar = true;
+            validar = true;
         }
     }
-
+    
     return validar;
 }
 int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
@@ -221,77 +210,71 @@ int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
     //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
     bool validar = false;
     
-    //ler as diagonais para baixo
-    if(lin_ori < lin_des)
+    //Movimento para baixo e esquerda
+    if(lin_ori < lin_des && col_ori > col_des)
     {
-        for(int i=lin_ori+1;i<lin_des-1;i++)
+        for(int i = lin_des-1, j = col_des+1;i>lin_ori && j<col_ori;i--,j++)
         {
-            //ler as diagonais da direita
-            if(col_ori < col_des)
+            if(tab[i*8+j]>1)
             {
-                for(int j=col_ori;j<col_des;j++)
-                {
-                    if(tab[i*8+(j+1)]>1)
-                    {
-                        return false;
-                    }
-                    else
-                    validar = true;
-                }
+                return false;
             }
-
-            //ler as diagonais da esquerda
             else
             {
-                for(int j=col_ori;j>col_des;j--)
-                {
-                    if(tab[i*8+(j-1)]>1)
-                    {
-                        return false;
-                    }
-                    else
-                    validar = true;
-                }
+                validar = true;
             }
         }
     }
+    //Movimento para baixo e direita
+    else if(lin_ori < lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des-1, j = col_des-1;i>lin_ori && j>col_ori;i--,j--)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return false;
+            }
+            else
+            {
+                validar = true;
+            }
+        }
+    }   
+    //Movimento para cima e direita
+    else if(lin_ori > lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des+1, j = col_des-1;i<lin_ori && j>col_ori;i++,j--)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return false;
+            }
+            else
+            {
+                validar = true;
+            }
+        }
+    }
+    //Movimento para cima e esquerda
+    else if(lin_ori > lin_des && col_ori > col_des)
+    {
+        for(int i = lin_des+1, j = col_des+1;i<lin_ori && j<col_ori;i++,j++)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return false;
+            }
+            else
+            {
+                validar = true;
+            }
+        }
 
-    //Ler as diagonais para cima
+    }
     else
     {
-        for(int i=lin_ori-1;i<lin_des+1;i++)
-        {
-            //Ler as diagonais da direita
-            if(col_ori < col_des)
-            {
-                for(int j=col_ori;j<col_des;j++)
-                {
-                    if(tab[i*8+(j+1)]>1)
-                    {
-                        return false;
-                    }
-                    else
-                    validar = true;
-                }
-            }
-
-            //Ler as diagonais da esquerda
-            else
-            {
-                for(int j=col_ori;j>col_des;j--)
-                {
-                    if(tab[i*8+(j-1)]>1)
-                    {
-                        return false;
-                    }
-                    else
-                    validar = true;
-                }
-            }
-        }
-        
+        return false;
     }
-
     return validar;
 }
 int vertical(int lin_ori, int col_ori, int lin_des, int *tab)
@@ -356,6 +339,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case peaoB:
         //Movimento nas diagonais e verificação se há algum inimigo lá
         if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
@@ -377,34 +361,35 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case cavaloB:
         //Movimento para baixo e esquerda
-        if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
         //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
         //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
         else if(lin_ori == lin_des + 1 && col_ori == col_des + 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
         //Movimento para baixo e esquerda
-        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
         //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
@@ -423,34 +408,35 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case cavaloP:
         //Movimento para baixo e esquerda
-        if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
+        if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
         //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && tabuleiro[lin_des*8+col_des] < 8)
+        else if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
         //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
         else if(lin_ori == lin_des + 1 && col_ori == col_des + 2 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
           //Movimento para baixo e esquerda
-        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
         //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
         {
             validar = true;
         }
@@ -469,6 +455,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoB:
         //Movimento para baixo e esquerda
         if(lin_ori == lin_des - 1 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
@@ -496,12 +483,15 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         }
         else
         {
+            printf("função diagonal: %d\nValor do tabuleiro destino: %d\nfunção de verificação: %d\nValor em b2: %d\n", diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro), tabuleiro[lin_des*8+col_des], verificadiagonal(lin_ori, col_ori, lin_des, col_des), tabuleiro[6*8+1]);
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoP:
 
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case torreB:
         //Movimento para baixo
         if(lin_ori < lin_des && col_ori == col_des)
@@ -543,7 +533,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         //Movimento para direita
         else if(col_ori < col_des && lin_ori == lin_des)
         {
-            if(col_ori + 1 == col_des && col_ori == col_des && (tabuleiro[lin_des
+            if(col_ori + 1 == col_des && lin_ori == lin_des && (tabuleiro[lin_des
             *8+col_des] <= 1 || tabuleiro[lin_des
             *8+col_des] >= 8))
             {
@@ -561,7 +551,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         //Movimento para esquerda
         else if(col_ori > col_des && lin_ori == lin_des)
         {
-            if(col_ori - 1 == col_des && col_ori == col_des && (tabuleiro[lin_des
+            if(col_ori - 1 == col_des && lin_ori == lin_des && (tabuleiro[lin_des
             *8+col_des] <= 1 || tabuleiro[lin_des
             *8+col_des] >= 8))
             {
@@ -581,6 +571,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case torreP:
         //Movimento para baixo
         if(lin_ori < lin_des && col_ori == col_des)
@@ -620,7 +611,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         //Movimento para direita
         else if(col_ori < col_des && lin_ori == lin_des)
         {
-            if(col_ori + 1 == col_des && col_ori == col_des && tabuleiro[lin_des
+            if(col_ori + 1 == col_des && lin_ori == lin_des && tabuleiro[lin_des
             *8+col_des] < 8)
             {
                 validar = true;
@@ -637,7 +628,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         //Movimento para esquerda
         else if(col_ori > col_des && lin_ori == lin_des)
         {
-            if(col_ori - 1 == col_des && col_ori == col_des && tabuleiro[lin_des
+            if(col_ori - 1 == col_des && lin_ori == lin_des && tabuleiro[lin_des
             *8+col_des] < 8)
             {
                 validar = true;
@@ -656,15 +647,19 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaB:
 
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaP:
 
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiB:
 
         break;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiP:
 
         break;

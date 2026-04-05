@@ -23,6 +23,7 @@ int cores(int col,int lin);
 void imprimirtabuleiro(int *pecas);
 int *criartabuleiro();
 
+int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des);
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab);
 int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab);
 int vertical(int lin_ori, int col_ori, int lin_des, int *tab);

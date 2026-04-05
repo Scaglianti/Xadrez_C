@@ -18,9 +18,21 @@
             "problemMatcher": [
                 "$gcc"
             ],
+            "group": "build"
+        },
+        {
+            "label": "Compilar e Rodar Xadrez",
+            "type": "shell",
+            "command": "${fileDirname}\\output\\main.exe",
+            "dependsOn": "Compilar Projeto Xadrez",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
             }
         }
     ]

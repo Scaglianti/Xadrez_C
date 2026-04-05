@@ -117,7 +117,70 @@ int *criartabuleiro()
 
     return pecas_numericas;
 }
-
+int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
+{
+    //Movimento para baixo e esquerda
+    if(lin_ori < lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des;i>=lin_ori;i--)
+        {
+            for(int j = col_des;j>=col_ori;j--)
+            {
+                if(i == lin_ori && j == col_ori)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    //Movimento para baixo e direita
+    else if(lin_ori < lin_des && col_ori > col_des)
+    {
+        for(int i = lin_des;i>=lin_ori;i--)
+        {
+            for(int j = col_des;j<=col_ori;j++)
+            {
+                if(i == lin_ori && j == col_ori)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    //Movimento para cima e direita
+    else if(lin_ori > lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des;i<=lin_ori;i++)
+        {
+            for(int j = col_des;j>=col_ori;j--)
+            {
+                if(i == lin_ori && j == col_ori)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    //Movimento para cima e esquerda
+    else if(lin_ori > lin_des && col_ori > col_des)
+    {
+        for(int i = lin_des;i<=lin_ori;i++)
+        {
+            for(int j = col_des;j<=col_ori;j++)
+            {
+                if(i == lin_ori && j == col_ori)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+    return false; 
+}
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
@@ -273,14 +336,17 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
     switch(peca)
     {
         case peaoP:
+        //Movimento nas diagonais e verificação se há algum inimigo lá
         if(lin_des == lin_ori+1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]<8 && tabuleiro[lin_des*8+col_des]>1)
         {
             validar = true;
         }
+        //Movimento para baixo
         else if(col_ori == col_des && lin_des == lin_ori+1 && tabuleiro[lin_des*8+col_des]<=1)
         {
             validar = true;
         }
+        //Movimento de dois passos do peão
         else if(lin_ori == 1 && col_ori == col_des && lin_des == 3 && tabuleiro[2*8+col_ori] <= 1 && tabuleiro[3*8+col_ori] <= 1)
         {
             validar = true;
@@ -291,14 +357,17 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         }
         break;
         case peaoB:
+        //Movimento nas diagonais e verificação se há algum inimigo lá
         if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
         {
             validar = true;
         }
+        //Movimento para cima
         else if(col_ori == col_des && lin_des == lin_ori-1 && tabuleiro[lin_des*8+col_des]<=1)
         {
             validar = true;
         }
+        //Movimento de dois passos do peão
         else if(lin_ori == 6 && col_ori == col_des && lin_des == 4 && tabuleiro[5*8+col_ori] <= 1 && tabuleiro[4*8+col_ori] <= 1)
         {
             validar = true;
@@ -329,6 +398,26 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         {
             validar = true;
         }
+        //Movimento para baixo e esquerda
+        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
         else
         {
             return false;
@@ -355,13 +444,60 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         {
             validar = true;
         }
+          //Movimento para baixo e esquerda
+        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
         else
         {
             return false;
         }
         break;
         case bispoB:
-
+        //Movimento para baixo e esquerda
+        if(lin_ori == lin_des - 1 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 1 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
+        }
         break;
         case bispoP:
 

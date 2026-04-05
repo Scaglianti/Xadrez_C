@@ -309,10 +309,56 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         }
         break;
         case cavaloB:
-        
+        //Movimento para baixo e esquerda
+        if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des + 2 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
+        }
         break;
         case cavaloP:
-
+        //Movimento para baixo e esquerda
+        if(lin_ori == lin_des - 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 1 && col_ori == col_des + 2 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des + 2 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
+        }
         break;
         case bispoB:
 

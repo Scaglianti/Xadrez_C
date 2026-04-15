@@ -431,22 +431,22 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             validar = true;
         }
           //Movimento para baixo e esquerda
-        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
         //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
         //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
         //Movimento para cima e direita
-        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1 && (tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8))
+        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1 && tabuleiro[lin_des*8+col_des] < 8)
         {
             validar = true;
         }
@@ -483,13 +483,39 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         }
         else
         {
-            printf("função diagonal: %d\nValor do tabuleiro destino: %d\nfunção de verificação: %d\nValor em b2: %d\n", diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro), tabuleiro[lin_des*8+col_des], verificadiagonal(lin_ori, col_ori, lin_des, col_des), tabuleiro[6*8+1]);
             return false;
         }
         break;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoP:
-
+        //Movimento para baixo e esquerda
+        if(lin_ori == lin_des - 1 && col_ori == col_des - 1 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para baixo e direita
+        else if(lin_ori == lin_des - 1 && col_ori == col_des + 1 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para cima e esquerda
+        else if(lin_ori == lin_des + 1 && col_ori == col_des - 1 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        //Movimento para cima e direita
+        else if(lin_ori == lin_des + 1 && col_ori == col_des + 1 && tabuleiro[lin_des*8+col_des] < 8)
+        {
+            validar = true;
+        }
+        else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && tabuleiro[lin_des*8+col_des] < 8 && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+        {
+            validar = true;
+        }
+        else
+        {
+            return false;
+        }
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case torreB:
@@ -677,7 +703,13 @@ void lermovimento(int *val_col,int *val_lin)
     while(validar)
     {
         scanf(" %c%c",&notacao[0],&notacao[1]);
-        if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
+        if(notacao[0] == '-' && notacao[1] == '-')
+        {
+            *val_col = -1;
+            *val_lin = -1;
+            return;
+        }
+        else if(notacao[0] < 'a' || notacao[0] > 'h' || notacao[1] < '1' || notacao[1] > '8')
         {
             printf("Erro!! Posição invalida, tente novamente.\n");
         }
@@ -695,36 +727,67 @@ void movimento(int *tab)
     int lin_ori,col_ori,lin_des,col_des;
     int cor;
     bool validar = true;
-    
-    while(validar)
+    while(1)
     {
-        printf("Informe a casa que você quer andar: ");
-        lermovimento(&col_ori,&lin_ori);
-        int peca = tab[lin_ori*8 + col_ori];
-        
-        
-        if(peca == quadradoB || peca == quadradoP)
-        {
-            printf("Você não pode movimentar uma casa vazia! Tente novamente.\n");
-        }
-        else
-        validar = false;
-    }
+        bool cancelar = false;
+        validar = true;
 
-    validar = true;
-    while(validar)
-    {
-        printf("Informe a casa para onde você quer andar: ");
-        lermovimento(&col_des,&lin_des);
-        int peca = tab[lin_ori*8 + col_ori];
-        
-        if(!sistema(peca, col_ori, lin_ori, lin_des, col_des, tab))
+        while(validar)
         {
-            printf("Ação inválida!! Tente novamente.\n");
+            printf("Informe a casa que você quer andar: ");
+            lermovimento(&col_ori,&lin_ori);
+            int peca = tab[lin_ori*8 + col_ori];
+            
+            
+            if(peca == quadradoB || peca == quadradoP)
+            {
+                printf("Você não pode movimentar uma casa vazia! Tente novamente.\n");
+            }
+            else if(lin_ori == -1 && col_ori == -1)
+            {
+                cancelar = true;
+                break;
+            }
+            else
+            validar = false;
         }
-        else
-        validar = false;
+
+        if(cancelar)
+        {
+            printf("Ação cancelada\n\n");
+            continue;
+        }
+        cancelar = false;
+        validar = true;
+        
+        while(validar)
+        {
+            printf("Informe a casa para onde você quer andar: ");
+            lermovimento(&col_des,&lin_des);
+            int peca = tab[lin_ori*8 + col_ori];
+            
+            if(lin_des == -1 && col_des == -1)
+            {
+                cancelar = true;
+                break;
+            }
+            else if(!sistema(peca, col_ori, lin_ori, lin_des, col_des, tab))
+            {
+                printf("Ação inválida!! Tente novamente.\n");
+            }
+            else
+            validar = false;
+        }
+
+        if(cancelar)
+        {
+            printf("Ação cancelada\n\n");
+            continue;
+        } 
+            
+        break;
     }
+    
     
     cor = cores(col_ori,lin_ori);
     tab[lin_des*8+col_des] = tab[lin_ori*8+col_ori];

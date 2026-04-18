@@ -34,13 +34,10 @@ int main()
         imprimirtabuleiro(tab);
         printf("\n");
         printf("Vez do jogador %d fazer seu movimento:\n", (rodada%2)+1);
-        movimento(tab);
+        movimento(tab, rodada);
         printf("\n\n");
         rodada++;
     }
     
     return 0;
 }
-
-//cd "c:\Users\USUÁRIO\Documents\Projetos\Xadrez em Linguagem C\xadrez"
-//gcc -g main.c tabuleiro.c -o output\main.exe

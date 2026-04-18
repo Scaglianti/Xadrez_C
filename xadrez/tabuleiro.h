@@ -23,6 +23,7 @@ int cores(int col,int lin);
 void imprimirtabuleiro(int *pecas);
 int *criartabuleiro();
 
+int verificadirecao(int lin_ori, int col_ori, int lin_des, int col_des);
 int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des);
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab);
 int diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab);
@@ -30,6 +31,7 @@ int vertical(int lin_ori, int col_ori, int lin_des, int *tab);
 int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *tabuleiro);
 
 void lermovimento(int *val_col,int *val_lin);
-void movimento(int *tab);
+int verificapeca(int* tab, int lin_ori, int col_ori);
+void movimento(int *tab, int rodada);
 
 #endif

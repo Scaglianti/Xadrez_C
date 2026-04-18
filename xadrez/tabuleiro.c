@@ -118,6 +118,40 @@ int *criartabuleiro()
     return pecas_numericas;
 }
 
+int verificadirecao(int lin_ori, int col_ori, int lin_des, int col_des)
+{
+    if(lin_ori == lin_des)
+    {
+        if(col_ori < col_des)
+        {
+            return true;
+        }
+        else if(col_ori > col_des)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if(col_ori == col_des)
+    {
+        if(lin_ori < lin_des)
+        {
+            return true;
+        }
+        else if(lin_ori > lin_des)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return false;
+}
 int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
 {
     //Movimento para baixo e esquerda
@@ -178,7 +212,7 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
     //Leitura da horizontal para direita
     if(col_ori<col_des)
     {
-        for(int i=col_ori+1;i<col_des-1;i++)
+        for(int i=col_ori+1;i<col_des;i++)
         {
             if(tab[lin_ori*8+i]>1)
             {
@@ -192,7 +226,7 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
     //Leitura da horizontal para esquerda
     else
     {
-        for(int i=col_ori-1;i>col_des+1;i--)
+        for(int i=col_ori-1;i>col_des;i--)
         {
             if(tab[lin_ori*8+i]>1)
             {
@@ -675,11 +709,89 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaB:
-
+        if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
+            {
+                if(lin_des == lin_ori && (col_des == col_ori + 1 || col_des == col_ori - 1))
+                    {
+                        validar = true;
+                    }
+                    else if((lin_des == lin_ori + 1 || lin_des == lin_ori - 1) && col_des == col_ori)
+                    {
+                        validar = true;
+                    }
+                    else if((lin_des == lin_ori-1 || lin_des == lin_ori +1) && (col_des == col_ori-1 || col_des == col_ori+1))
+                    {
+                        validar = true;
+                    }
+                    else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+                        {
+                            validar = true;
+                        }        
+                    else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
+                    {
+                        if(col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
+                        {
+                            validar = true;
+                        }
+                        else if(lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
+                        {
+                            validar = true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+        }
+        else
+        return false;
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaP:
-
+        if(tabuleiro[lin_des*8+col_des] < 8)
+            {
+                if(lin_des == lin_ori && (col_des == col_ori + 1 || col_des == col_ori - 1))
+                    {
+                        validar = true;
+                    }
+                    else if((lin_des == lin_ori + 1 || lin_des == lin_ori - 1) && col_des == col_ori)
+                    {
+                        validar = true;
+                    }
+                    else if((lin_des == lin_ori-1 || lin_des == lin_ori +1) && (col_des == col_ori-1 || col_des == col_ori+1))
+                    {
+                        validar = true;
+                    }
+                    else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+                        {
+                            validar = true;
+                        }        
+                    else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
+                    {
+                        if((lin_ori < lin_des || lin_ori > lin_des) && col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
+                        {
+                            validar = true;
+                        }
+                        else if((col_ori < col_des || col_ori > col_des) && lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
+                        {
+                            validar = true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+        }
+        else
+        return false;
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiB:

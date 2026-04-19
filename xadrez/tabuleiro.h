@@ -24,6 +24,12 @@ int cores(int col,int lin);
 void imprimirtabuleiro(int *pecas);
 int *criartabuleiro();
 
+int peca_horizontal(int lin, int col, int *tab, int rei);
+int peca_diagonal(int lin, int col, int *tab, int rei);
+int peca_vertical(int lin, int col, int *tab, int rei);
+int peca_cavalo(int lin, int col, int* tab);
+
+
 int verificadirecao(int lin_ori, int col_ori, int lin_des, int col_des);
 int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des);
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab);

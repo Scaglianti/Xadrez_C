@@ -223,199 +223,178 @@ int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
     return false; 
 }
 
-int peca_horizontal(int lin_ori, int col_ori, int col_des, int *tab)
+int* peca_horizontal(int lin, int col, int *tab, int rei)
 {
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
-    bool validar = false;
-    int peca = 0;
+    int pecas[2];
+       
+    //Leitura da horizontal para direita ⮕
+    for(int i=col+1;i<8;i++)
+    {
+        if(tab[lin*8+i]>1 && tab[lin*8+i] != rei)
+        {
+            pecas[0] = tab[lin*8+i];
+            break;
+        }
+        else
+        pecas[0] = false;
+    }
 
-    //Leitura da horizontal para direita
-    if(col_ori<col_des)
+    //Leitura da horizontal para esquerda ⬅
+    for(int i=col-1;i>=0;i--)
     {
-        for(int i=col_ori+1;i<col_des;i++)
+        if(tab[lin*8+i]>1 && tab[lin*8+i] != rei)
         {
-            if(tab[lin_ori*8+i]>1)
-            {
-                return tab[lin_ori*8+i];
-            }
-            else
-            validar = false;
+            pecas[1] = tab[lin*8+i];
+            break;
         }
+        else
+        pecas[1] = false;
     }
-    
-    //Leitura da horizontal para esquerda
-    else
-    {
-        for(int i=col_ori-1;i>col_des;i--)
-        {
-            if(tab[lin_ori*8+i]>1)
-            {
-                return tab[lin_ori*8+i];
-            }
-            else
-            validar = false;
-        }
-    }
-    
-    return validar;
+
+    return pecas;
 }
-int peca_diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+int peca_diagonal(int lin, int col, int *tab, int rei)
 {
     //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
-    bool validar = false;
+    int pecas[4];
     
-    //Movimento para baixo e esquerda
-    if(lin_ori < lin_des && col_ori > col_des)
+    //Movimento para baixo e esquerda ⬋
+    for(int i = lin-1, j = col+1;i>=0 && j<8;i--,j++)
     {
-        for(int i = lin_des-1, j = col_des+1;i>lin_ori && j<col_ori;i--,j++)
+        if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
-            if(tab[i*8+j]>1)
-            {
-                return tab[i*8+j];
-            }
-            else
-            {
-                validar = false;
-            }
+            pecas[0] = tab[i*8+j];
+        }
+        else
+        {
+            pecas[0] = false;
         }
     }
-    //Movimento para baixo e direita
-    else if(lin_ori < lin_des && col_ori < col_des)
+    
+    //Movimento para baixo e direita ⬊
+    for(int i = lin-1, j = col-1;i>=0 && j>=0;i--,j--)
     {
-        for(int i = lin_des-1, j = col_des-1;i>lin_ori && j>col_ori;i--,j--)
+        if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
-            if(tab[i*8+j]>1)
-            {
-                return tab[i*8+j];
-            }
-            else
-            {
-                validar = false;
-            }
+            pecas[1] = tab[i*8+j];
         }
-    }   
-    //Movimento para cima e direita
-    else if(lin_ori > lin_des && col_ori < col_des)
-    {
-        for(int i = lin_des+1, j = col_des-1;i<lin_ori && j>col_ori;i++,j--)
+        else
         {
-            if(tab[i*8+j]>1)
-            {
-                return tab[i*8+j];
-            }
-            else
-            {
-                validar = false;
-            }
+            pecas[1] = false;
         }
     }
-    //Movimento para cima e esquerda
-    else if(lin_ori > lin_des && col_ori > col_des)
-    {
-        for(int i = lin_des+1, j = col_des+1;i<lin_ori && j<col_ori;i++,j++)
-        {
-            if(tab[i*8+j]>1)
-            {
-                return tab[i*8+j];
-            }
-            else
-            {
-                validar = false;
-            }
-        }
 
-    }
-    else
+    //Movimento para cima e direita ⬈
+    for(int i = lin+1, j = col-1;i<8 && j>=0;i++,j--)
     {
-        return false;
+        if(tab[i*8+j]>1 && tab[i*8+j] != rei)
+        {
+            pecas[2] = tab[i*8+j];
+        }
+        else
+        {
+            pecas[2] = false;
+        }
     }
-    return validar;
+
+    //Movimento para cima e esquerda ⬉
+    for(int i = lin+1, j = col+1;i<8 && j<8;i++,j++)
+    {
+        if(tab[i*8+j]>1 && tab[i*8+j] != rei)
+        {
+            pecas[3] = tab[i*8+j];
+        }
+        else
+        {
+            pecas[3] = false;
+        }
+    }
+
+    return pecas;
 }
-int peca_vertical(int lin_ori, int col_ori, int lin_des, int *tab)
+int peca_vertical(int lin, int col, int *tab, int rei)
 {
     //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
-    bool validar = false;
+    int pecas[2];
 
-    //Leitura da vertical para baixo
-    if(lin_ori<lin_des)
+    //Leitura da vertical para baixo ⬇
+    for(int i=lin+1;i<8;i++)
     {
-        for(int i=lin_ori+1;i<lin_des;i++)
+        if(tab[i*8+col]>1 && tab[i*8+col] != rei)
         {
-            if(tab[i*8+col_ori]>1)
-            {
-                return tab[i*8+col_ori];
-            }
-            else
-            validar = false;
+            pecas[0] = tab[i*8+col];
         }
+        else
+        pecas[0] = false;
+    }
+    
+    //Leitura da vertical para cima ⬆
+    for(int i=lin-1;i>=0;i--)
+    {
+        if(tab[i*8+col]>1 && tab[i*8+col] != rei)
+        {
+            pecas[1] = tab[i*8+col];
+        }
+        else
+            pecas[1] = false;
     }
 
-    //Leitura da vertical para cima
-    else
-    {
-        for(int i=lin_ori-1;i>lin_des;i--)
-        {
-            if(tab[i*8+col_ori]>1)
-            {
-                return tab[i*8+col_ori];
-            }
-            else
-                validar = false;
-        }
-    }
-
-    return validar;
+    return pecas;
 }
 int peca_cavalo(int lin, int col, int* tab)
 {
-    bool validar = false;
+    int pecas[8];
 
     //Movimento para baixo e esquerda
     if(tab[(lin-1)*8+(col+2)] == 3 || tab[(lin-1)*8+(col+2)] == 9)
     {
-        return tab[(lin-1)*8+(col+2)];
+        pecas[0] = tab[(lin-1)*8+(col+2)];
     }
     //Movimento para baixo e direita
     else if(tab[(lin-1)*8+(col-2)] == 3 || tab[(lin-1)*8+(col-2)] == 9)
     {
-        return tab[(lin-1)*8+(col-2)];
+        pecas[1] = tab[(lin-1)*8+(col-2)];
     }
     //Movimento para cima e esquerda
     else if(tab[(lin+1)*8+(col+2)] == 3 || tab[(lin+1)*8+(col+2)] == 9)
     {
-        return tab[(lin+1)*8+(col+2)];
+        pecas[2] = tab[(lin+1)*8+(col+2)];
     }
     //Movimento para cima e direita
     else if(tab[(lin+1)*8+(col-2)] == 3 || tab[(lin+1)*8+(col-2)] == 9)
     {
-        return tab[(lin+1)*8+(col-2)];
+        pecas[3] = tab[(lin+1)*8+(col-2)];
     }
     //Movimento para baixo e esquerda
     else if(tab[(lin-2)*8+(col+1)] == 3 || tab[(lin-2)*8+(col+1)] == 9)
     {
-        return tab[(lin-2)*8+(col+1)];
+        pecas[4] = tab[(lin-2)*8+(col+1)];
     }
     //Movimento para baixo e direita
     else if(tab[(lin-2)*8+(col-1)] == 3 || tab[(lin-2)*8+(col-1)] == 9)
     {
-        return tab[(lin-2)*8+(col-1)];
+        pecas[5] = tab[(lin-2)*8+(col-1)];
     }
     //Movimento para cima e esquerda
     else if(tab[(lin+2)*8+(col+1)] == 3 || tab[(lin+2)*8+(col+1)] == 9)
     {
-        return tab[(lin+2)*8+(col+1)];
+        pecas[6] = tab[(lin+2)*8+(col+1)];
     }
     //Movimento para cima e direita
     else if(tab[(lin+2)*8+(col-1)] == 3 || tab[(lin+2)*8+(col-1)] == 9)
     {
-        return tab[(lin+2)*8+(col-1)];
+        pecas[7] = tab[(lin+2)*8+(col-1)];
     }
     else
     {
         return false;
     }
-    return validar;
+
+    return pecas;
 }
+
+
 
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
@@ -566,17 +545,17 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
     switch(peca)
     {
         case peaoP:
-        //Movimento nas diagonais e verificação se há algum inimigo lá
+        //Movimento nas Diagonais
         if(lin_des == lin_ori+1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]<8 && tabuleiro[lin_des*8+col_des]>1)
         {
             validar = true;
         }
-        //Movimento para baixo
+        //Movimento de Um Passo Para Frente
         else if(col_ori == col_des && lin_des == lin_ori+1 && tabuleiro[lin_des*8+col_des]<=1)
         {
             validar = true;
         }
-        //Movimento de dois passos do peão
+        //Movimento de Dois Passos Para Frente
         else if(lin_ori == 1 && col_ori == col_des && lin_des == 3 && tabuleiro[2*8+col_ori] <= 1 && tabuleiro[3*8+col_ori] <= 1)
         {
             validar = true;
@@ -588,17 +567,17 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case peaoB:
-        //Movimento nas diagonais e verificação se há algum inimigo lá
+        //Movimento nas Diagonais
         if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
         {
             validar = true;
         }
-        //Movimento para cima
+        //Movimento de Um Passo para Frente
         else if(col_ori == col_des && lin_des == lin_ori-1 && tabuleiro[lin_des*8+col_des]<=1)
         {
             validar = true;
         }
-        //Movimento de dois passos do peão
+        //Movimento de Dois Passos para Frente
         else if(lin_ori == 6 && col_ori == col_des && lin_des == 4 && tabuleiro[5*8+col_ori] <= 1 && tabuleiro[4*8+col_ori] <= 1)
         {
             validar = true;
@@ -612,47 +591,47 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case cavaloB:
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
-        //Movimento para baixo e esquerda
-        if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
-        {
-            validar = true;
-        }
-        //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 1 && col_ori == col_des - 2)
-        {
-            validar = true;
-        }
-        //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 1 && col_ori == col_des + 2)
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
-        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2)
-        {
-            validar = true;
-        }
-        //Movimento para baixo e esquerda
-        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1)
-        {
-            validar = true;
-        }
-        //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1)
-        {
-            validar = true;
-        }
-        //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1)
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
-        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1)
-        {
-            validar = true;
-        }
-        else
+            //Movimento para Baixo e Esquerda ⬐
+            if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Direita ⬎
+            else if(lin_ori == lin_des - 1 && col_ori == col_des - 2)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Esquerda ⬑
+            else if(lin_ori == lin_des + 1 && col_ori == col_des + 2)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Direita ⬏
+            else if(lin_ori == lin_des + 1 && col_ori == col_des - 2)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Esquerda ↲
+            else if(lin_ori == lin_des - 2 && col_ori == col_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Direita ↳
+            else if(lin_ori == lin_des - 2 && col_ori == col_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Esquerda ↰
+            else if(lin_ori == lin_des + 2 && col_ori == col_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Direita ↱
+            else if(lin_ori == lin_des + 2 && col_ori == col_des - 1)
+            {
+                validar = true;
+            }
+            else
         {
             return false;
         }
@@ -666,47 +645,47 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case cavaloP:
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
-        //Movimento para baixo e esquerda
-        if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
-        {
-            validar = true;
-        }
-        //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 1 && col_ori == col_des - 2)
-        {
-            validar = true;
-        }
-        //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 1 && col_ori == col_des + 2)
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
-        else if(lin_ori == lin_des + 1 && col_ori == col_des - 2)
-        {
-            validar = true;
-        }
-          //Movimento para baixo e esquerda
-        else if(lin_ori == lin_des - 2 && col_ori == col_des + 1)
-        {
-            validar = true;
-        }
-        //Movimento para baixo e direita
-        else if(lin_ori == lin_des - 2 && col_ori == col_des - 1)
-        {
-            validar = true;
-        }
-        //Movimento para cima e esquerda
-        else if(lin_ori == lin_des + 2 && col_ori == col_des + 1)
-        {
-            validar = true;
-        }
-        //Movimento para cima e direita
-        else if(lin_ori == lin_des + 2 && col_ori == col_des - 1)
-        {
-            validar = true;
-        }
-        else
+            //Movimento para Baixo e Esquerda ⬐
+            if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Direita ⬎
+            else if(lin_ori == lin_des - 1 && col_ori == col_des - 2)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Esquerda ⬑
+            else if(lin_ori == lin_des + 1 && col_ori == col_des + 2)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Direita ⬏
+            else if(lin_ori == lin_des + 1 && col_ori == col_des - 2)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Esquerda ↲
+            else if(lin_ori == lin_des - 2 && col_ori == col_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo e Direita ↳
+            else if(lin_ori == lin_des - 2 && col_ori == col_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Esquerda ↰
+            else if(lin_ori == lin_des + 2 && col_ori == col_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Cima e Direita ↱
+            else if(lin_ori == lin_des + 2 && col_ori == col_des - 1)
+            {
+                validar = true;
+            }
+            else
         {
             return false;
         }
@@ -720,22 +699,22 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case bispoB:
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
-        //Movimento para baixo e esquerda
+        //Movimento para Diagonal Esquerda Baixo ⬋
         if(lin_ori == lin_des - 1 && col_ori == col_des - 1)
         {
             validar = true;
         }
-        //Movimento para baixo e direita
+        //Movimento para Diagonal Direita Baixo ⬊
         else if(lin_ori == lin_des - 1 && col_ori == col_des + 1)
         {
             validar = true;
         }
-        //Movimento para cima e esquerda
+        //Movimento para Diagonal Esquerda Cima ⬉
         else if(lin_ori == lin_des + 1 && col_ori == col_des - 1)
         {
             validar = true;
         }
-        //Movimento para cima e direita
+        //Movimento para Diagonal Direita Cima ⬈
         else if(lin_ori == lin_des + 1 && col_ori == col_des + 1)
         {
             validar = true;
@@ -754,26 +733,26 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             return false;
         }
         break;
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoP:
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
-        //Movimento para baixo e esquerda
+        //Movimento para Diagonal Esquerda Baixo ⬋
         if(lin_ori == lin_des - 1 && col_ori == col_des - 1)
         {
             validar = true;
         }
-        //Movimento para baixo e direita
+        //Movimento para Diagonal Direita Baixo ⬊
         else if(lin_ori == lin_des - 1 && col_ori == col_des + 1)
         {
             validar = true;
         }
-        //Movimento para cima e esquerda
+        //Movimento para Diagonal Esquerda Cima ⬉
         else if(lin_ori == lin_des + 1 && col_ori == col_des - 1)
         {
             validar = true;
         }
-        //Movimento para cima e direita
+        //Movimento para Diagonal Direita Cima ⬈
         else if(lin_ori == lin_des + 1 && col_ori == col_des + 1)
         {
             validar = true;
@@ -796,70 +775,39 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case torreB:
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
-            //Movimento para baixo
-            if(lin_ori < lin_des && col_ori == col_des)
+            //Movimento para Cima ⬆
+            if(col_ori == col_des && lin_ori == lin_des + 1)
             {
-                if(lin_ori + 1 == lin_des && col_ori == col_des)
-                {
-                    validar = true;
-                }
-                else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
-                
+                validar = true;
             }
-            //Movimento para cima
-            else if(lin_ori > lin_des && col_ori == col_des)
+            //Movimento para Direita ⮕
+            else if(col_ori == col_des - 1 && lin_ori == lin_des)
             {
-                if(lin_ori-1 == lin_des && col_ori == col_des)
-                {
-                    validar = true;
-                }
-                else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
+                validar = true;
             }
-            //Movimento para direita
-            else if(col_ori < col_des && lin_ori == lin_des)
+            //Movimento para Baixo ⬇
+            else if(col_ori == col_des && lin_ori == lin_des - 1)
             {
-                if(col_ori + 1 == col_des && lin_ori == lin_des)
-                {
-                    validar = true;
-                }
-                else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
-                }
-            //Movimento para esquerda
-            else if(col_ori > col_des && lin_ori == lin_des)
+                validar = true;
+            }
+            //Movimento para Esquerda ⬅
+            else if(col_ori == col_des + 1 && lin_ori == lin_des)
             {
-                if(col_ori - 1 == col_des && lin_ori == lin_des)
-                {
-                    validar = true;
-                }
-                else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
+                validar = true;
+            }
+            //Movimento para as Verticais distantes
+            else if(col_ori == col_des && (lin_ori < lin_des || lin_ori > lin_des) && vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            //Movimento para as Horizontais distantes
+            else if(lin_ori == lin_des && (col_ori < col_des || col_ori > col_des) && horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
             }
         } 
         else
@@ -871,71 +819,36 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case torreP:
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
-            //Movimento para baixo
-            if(lin_ori < lin_des && col_ori == col_des)
+            //Movimento para Cima ⬆
+            if(col_ori == col_des && lin_ori == lin_des + 1)
             {
-                if(lin_ori + 1 == lin_des && col_ori == col_des)
-                {
-                    validar = true;
-                }
-                else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
-                
+                validar = true;
             }
-            //Movimento para cima
-            else if(lin_ori > lin_des && col_ori == col_des)
+            //Movimento para Direita ⮕
+            else if(col_ori == col_des - 1 && lin_ori == lin_des)
             {
-                if(lin_ori-1 == lin_des && col_ori == col_des)
-                {
-                    validar = true;
-                }
-                else if(vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
+                validar = true;
             }
-            //Movimento para direita
-            else if(col_ori < col_des && lin_ori == lin_des)
+            //Movimento para Baixo ⬇
+            else if(col_ori == col_des && lin_ori == lin_des - 1)
             {
-                if(col_ori + 1 == col_des && lin_ori == lin_des)
-                {
-                    validar = true;
-                }
-                else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
+                validar = true;
             }
-            //Movimento para esquerda
-            else if(col_ori > col_des && lin_ori == lin_des)
+            //Movimento para Esquerda ⬅
+            else if(col_ori == col_des + 1 && lin_ori == lin_des)
             {
-                if(col_ori - 1 == col_des && lin_ori == lin_des)
-                {
-                    validar = true;
-                }
-                else if(horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                {
-                    validar = true;
-                }
-                else
-                {
-                    return false;
-                }
-            } 
+                validar = true;
+            }
+            //Movimento para as Verticais distantes
+            else if(col_ori == col_des && (lin_ori < lin_des || lin_ori > lin_des) && vertical(lin_ori, col_ori, lin_des, tabuleiro))
+            {
+                validar = true;
+            }
+            //Movimento para as Horizontais distantes
+            else if(lin_ori == lin_des && (col_ori < col_des || col_ori > col_des) && horizontal(lin_ori, col_ori, col_des, tabuleiro))
+            {
+                validar = true;
+            }
             else
             {
                 return false;
@@ -946,42 +859,72 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case rainhaB:
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
             {
-                if(lin_des == lin_ori && (col_des == col_ori + 1 || col_des == col_ori - 1))
+                //Movimento para Cima ⬆
+                if(col_ori == col_des && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Direita Cima ⬈
+                else if(col_ori == col_des - 1 && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Direita ⮕
+                else if(col_ori == col_des - 1 && lin_ori == lin_des)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Direita Baixo ⬊
+                else if(col_ori == col_des - 1 && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Baixo ⬇
+                else if(col_ori == col_des && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Esquerda Baixo ⬋
+                else if(col_ori == col_des + 1 && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Esquerda ⬅
+                else if(col_ori == col_des + 1 && lin_ori == lin_des)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Esquerda Cima ⬉
+                else if(col_ori == col_des + 1 && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento nas Diagonais mais distantes
+                else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+                {
+                    validar = true;
+                }     
+                //Movimento para Verticais e Horizontais mais distantes   
+                else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
+                {
+                    if(col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
                     {
                         validar = true;
                     }
-                    else if((lin_des == lin_ori + 1 || lin_des == lin_ori - 1) && col_des == col_ori)
+                    else if(lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
                     {
                         validar = true;
-                    }
-                    else if((lin_des == lin_ori-1 || lin_des == lin_ori +1) && (col_des == col_ori-1 || col_des == col_ori+1))
-                    {
-                        validar = true;
-                    }
-                    else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
-                        {
-                            validar = true;
-                        }        
-                    else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
-                    {
-                        if(col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                        {
-                            validar = true;
-                        }
-                        else if(lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                        {
-                            validar = true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
                     }
                     else
                     {
                         return false;
                     }
-        }
+                }
+                else
+                {
+                    return false;
+                }
+            }
         else
         {
             return false;
@@ -991,41 +934,71 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case rainhaP:
         if(tabuleiro[lin_des*8+col_des] < 8)
             {
-                if(lin_des == lin_ori && (col_des == col_ori + 1 || col_des == col_ori - 1))
+                //Movimento para Cima ⬆
+                if(col_ori == col_des && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Direita Cima ⬈
+                else if(col_ori == col_des - 1 && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Direita ⮕
+                else if(col_ori == col_des - 1 && lin_ori == lin_des)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Direita Baixo ⬊
+                else if(col_ori == col_des - 1 && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Baixo ⬇
+                else if(col_ori == col_des && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Esquerda Baixo ⬋
+                else if(col_ori == col_des + 1 && lin_ori == lin_des - 1)
+                {
+                    validar = true;
+                }
+                //Movimento para Esquerda ⬅
+                else if(col_ori == col_des + 1 && lin_ori == lin_des)
+                {
+                    validar = true;
+                }
+                //Movimento para Diagonal Esquerda Cima ⬉
+                else if(col_ori == col_des + 1 && lin_ori == lin_des + 1)
+                {
+                    validar = true;
+                }
+                //Movimento nas Diagonais mais distantes
+                else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
+                {
+                    validar = true;
+                }        
+                //Movimento para Verticais e Horizontais mais distantes   
+                else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
+                {
+                    if((lin_ori < lin_des || lin_ori > lin_des) && col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
                     {
                         validar = true;
                     }
-                    else if((lin_des == lin_ori + 1 || lin_des == lin_ori - 1) && col_des == col_ori)
+                    else if((col_ori < col_des || col_ori > col_des) && lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
                     {
                         validar = true;
-                    }
-                    else if((lin_des == lin_ori-1 || lin_des == lin_ori +1) && (col_des == col_ori-1 || col_des == col_ori+1))
-                    {
-                        validar = true;
-                    }
-                    else if(diagonal(lin_ori, col_ori, lin_des, col_des, tabuleiro) && verificadiagonal(lin_ori, col_ori, lin_des, col_des))
-                        {
-                            validar = true;
-                        }        
-                    else if(verificadirecao(lin_ori, col_ori, lin_des, col_des))
-                    {
-                        if((lin_ori < lin_des || lin_ori > lin_des) && col_ori == col_des && vertical(lin_ori, col_ori, lin_des, tabuleiro))
-                        {
-                            validar = true;
-                        }
-                        else if((col_ori < col_des || col_ori > col_des) && lin_ori == lin_des && horizontal(lin_ori, col_ori, col_des, tabuleiro))
-                        {
-                            validar = true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
                     }
                     else
                     {
                         return false;
                     }
+                }
+                else
+                {
+                    return false;
+                }
         }
         else
         {
@@ -1035,10 +1008,252 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiB:
 
+        int* diagonal = peca_diagonal(lin_des,col_des,tabuleiro,reiB);
+        int* horizontal = peca_horizontal(lin_des,col_des,tabuleiro,reiB);
+        int* vertical = peca_vertical(lin_des,col_des,tabuleiro,reiB);
+        int* cavalo = peca_cavalo(lin_des, col_des, tabuleiro);
+
+        if(vertical[0]        ==  torreP || vertical[0]   == rainhaP)
+        {
+            return false;
+        }
+        else if(vertical[1]   ==  torreP || vertical[1]   == rainhaP)
+        {
+            return false;
+        }
+        else if(horizontal[0] ==  torreP || horizontal[0] == rainhaP)
+        {
+            return false;
+        }
+        else if(horizontal[1] ==  torreP || horizontal[1] == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP)
+        {
+            return false;
+        }
+        else if(cavalo[0]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[1]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[2]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[3]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[4]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[5]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[6]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[7]     ==  cavaloP)
+        {
+            return false;
+        }
+
+        if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
+        {
+            //Movimento para Cima ⬆
+            if(col_ori == col_des && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Direita Cima ⬈
+            else if(col_ori == col_des - 1 && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Direita ⮕
+            else if(col_ori == col_des - 1 && lin_ori == lin_des)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Direita Baixo ⬊
+            else if(col_ori == col_des - 1 && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo ⬇
+            else if(col_ori == col_des && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Esquerda Baixo ⬋
+            else if(col_ori == col_des + 1 && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Esquerda ⬅
+            else if(col_ori == col_des + 1 && lin_ori == lin_des)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Esquerda Cima ⬉
+            else if(col_ori == col_des + 1 && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiP:
 
+        int* diagonal = peca_diagonal(lin_des,col_des,tabuleiro,reiB);
+        int* horizontal = peca_horizontal(lin_des,col_des,tabuleiro,reiB);
+        int* vertical = peca_vertical(lin_des,col_des,tabuleiro,reiB);
+        int* cavalo = peca_cavalo(lin_des, col_des, tabuleiro);
+
+        if(vertical[0]        ==  torreB || vertical[0]   == rainhaB)
+        {
+            return false;
+        }
+        else if(vertical[1]   ==  torreB || vertical[1]   == rainhaB)
+        {
+            return false;
+        }
+        else if(horizontal[0] ==  torreB || horizontal[0] == rainhaB)
+        {
+            return false;
+        }
+        else if(horizontal[1] ==  torreB || horizontal[1] == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB)
+        {
+            return false;
+        }
+        else if(cavalo[0]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[1]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[2]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[3]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[4]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[5]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[6]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[7]     ==  cavaloB)
+        {
+            return false;
+        }
+
+        if(tabuleiro[lin_des*8+col_des] < 8)
+        {
+            //Movimento para Cima ⬆
+            if(col_ori == col_des && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Direita Cima ⬈
+            else if(col_ori == col_des - 1 && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            //Movimento para Direita ⮕
+            else if(col_ori == col_des - 1 && lin_ori == lin_des)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Direita Baixo ⬊
+            else if(col_ori == col_des - 1 && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Baixo ⬇
+            else if(col_ori == col_des && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Esquerda Baixo ⬋
+            else if(col_ori == col_des + 1 && lin_ori == lin_des - 1)
+            {
+                validar = true;
+            }
+            //Movimento para Esquerda ⬅
+            else if(col_ori == col_des + 1 && lin_ori == lin_des)
+            {
+                validar = true;
+            }
+            //Movimento para Diagonal Esquerda Cima ⬉
+            else if(col_ori == col_des + 1 && lin_ori == lin_des + 1)
+            {
+                validar = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
         break;
     }
    

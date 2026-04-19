@@ -18,6 +18,7 @@ typedef enum
     rainhaP,
     reiP
 }peca;
+extern const char* nomes[];
 
 int cores(int col,int lin);
 void imprimirtabuleiro(int *pecas);

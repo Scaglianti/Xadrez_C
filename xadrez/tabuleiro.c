@@ -3,6 +3,24 @@
 #include <stdbool.h>
 #include "tabuleiro.h"
 
+const char* nomes[] =
+{
+    "",
+    "",
+    "o Peão Branco",
+    "o Cavalo Branco",
+    "o Bispo Branco",
+    "a Torre Branca",
+    "a Rainha Branca",
+    "o Rei Branco",
+    "o Peão Preto",
+    "o Cavalo Preto",
+    "o Bispo Preto",
+    "a Torre Preta",
+    "a Rainha Preta",
+    "o Rei Preto"
+};
+
 int cores(int col,int lin)
 {
     //Função criada para identificar cada cor do tabuleiro (Preto e Branco) e repor (caso necessário) após o movimento
@@ -204,6 +222,201 @@ int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
     }
     return false; 
 }
+
+int peca_horizontal(int lin_ori, int col_ori, int col_des, int *tab)
+{
+    //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
+    bool validar = false;
+    int peca = 0;
+
+    //Leitura da horizontal para direita
+    if(col_ori<col_des)
+    {
+        for(int i=col_ori+1;i<col_des;i++)
+        {
+            if(tab[lin_ori*8+i]>1)
+            {
+                return tab[lin_ori*8+i];
+            }
+            else
+            validar = false;
+        }
+    }
+    
+    //Leitura da horizontal para esquerda
+    else
+    {
+        for(int i=col_ori-1;i>col_des;i--)
+        {
+            if(tab[lin_ori*8+i]>1)
+            {
+                return tab[lin_ori*8+i];
+            }
+            else
+            validar = false;
+        }
+    }
+    
+    return validar;
+}
+int peca_diagonal(int lin_ori, int col_ori, int lin_des, int col_des, int *tab)
+{
+    //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
+    bool validar = false;
+    
+    //Movimento para baixo e esquerda
+    if(lin_ori < lin_des && col_ori > col_des)
+    {
+        for(int i = lin_des-1, j = col_des+1;i>lin_ori && j<col_ori;i--,j++)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return tab[i*8+j];
+            }
+            else
+            {
+                validar = false;
+            }
+        }
+    }
+    //Movimento para baixo e direita
+    else if(lin_ori < lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des-1, j = col_des-1;i>lin_ori && j>col_ori;i--,j--)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return tab[i*8+j];
+            }
+            else
+            {
+                validar = false;
+            }
+        }
+    }   
+    //Movimento para cima e direita
+    else if(lin_ori > lin_des && col_ori < col_des)
+    {
+        for(int i = lin_des+1, j = col_des-1;i<lin_ori && j>col_ori;i++,j--)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return tab[i*8+j];
+            }
+            else
+            {
+                validar = false;
+            }
+        }
+    }
+    //Movimento para cima e esquerda
+    else if(lin_ori > lin_des && col_ori > col_des)
+    {
+        for(int i = lin_des+1, j = col_des+1;i<lin_ori && j<col_ori;i++,j++)
+        {
+            if(tab[i*8+j]>1)
+            {
+                return tab[i*8+j];
+            }
+            else
+            {
+                validar = false;
+            }
+        }
+
+    }
+    else
+    {
+        return false;
+    }
+    return validar;
+}
+int peca_vertical(int lin_ori, int col_ori, int lin_des, int *tab)
+{
+    //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
+    bool validar = false;
+
+    //Leitura da vertical para baixo
+    if(lin_ori<lin_des)
+    {
+        for(int i=lin_ori+1;i<lin_des;i++)
+        {
+            if(tab[i*8+col_ori]>1)
+            {
+                return tab[i*8+col_ori];
+            }
+            else
+            validar = false;
+        }
+    }
+
+    //Leitura da vertical para cima
+    else
+    {
+        for(int i=lin_ori-1;i>lin_des;i--)
+        {
+            if(tab[i*8+col_ori]>1)
+            {
+                return tab[i*8+col_ori];
+            }
+            else
+                validar = false;
+        }
+    }
+
+    return validar;
+}
+int peca_cavalo(int lin, int col, int* tab)
+{
+    bool validar = false;
+
+    //Movimento para baixo e esquerda
+    if(tab[(lin-1)*8+(col+2)] == 3 || tab[(lin-1)*8+(col+2)] == 9)
+    {
+        return tab[(lin-1)*8+(col+2)];
+    }
+    //Movimento para baixo e direita
+    else if(tab[(lin-1)*8+(col-2)] == 3 || tab[(lin-1)*8+(col-2)] == 9)
+    {
+        return tab[(lin-1)*8+(col-2)];
+    }
+    //Movimento para cima e esquerda
+    else if(tab[(lin+1)*8+(col+2)] == 3 || tab[(lin+1)*8+(col+2)] == 9)
+    {
+        return tab[(lin+1)*8+(col+2)];
+    }
+    //Movimento para cima e direita
+    else if(tab[(lin+1)*8+(col-2)] == 3 || tab[(lin+1)*8+(col-2)] == 9)
+    {
+        return tab[(lin+1)*8+(col-2)];
+    }
+    //Movimento para baixo e esquerda
+    else if(tab[(lin-2)*8+(col+1)] == 3 || tab[(lin-2)*8+(col+1)] == 9)
+    {
+        return tab[(lin-2)*8+(col+1)];
+    }
+    //Movimento para baixo e direita
+    else if(tab[(lin-2)*8+(col-1)] == 3 || tab[(lin-2)*8+(col-1)] == 9)
+    {
+        return tab[(lin-2)*8+(col-1)];
+    }
+    //Movimento para cima e esquerda
+    else if(tab[(lin+2)*8+(col+1)] == 3 || tab[(lin+2)*8+(col+1)] == 9)
+    {
+        return tab[(lin+2)*8+(col+1)];
+    }
+    //Movimento para cima e direita
+    else if(tab[(lin+2)*8+(col-1)] == 3 || tab[(lin+2)*8+(col-1)] == 9)
+    {
+        return tab[(lin+2)*8+(col-1)];
+    }
+    else
+    {
+        return false;
+    }
+    return validar;
+}
+
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
@@ -219,7 +432,7 @@ int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
                 return false;
             }
             else
-            validar = true;
+            validar = false;
         }
     }
     
@@ -399,7 +612,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case cavaloB:
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
-            //Movimento para baixo e esquerda
+        //Movimento para baixo e esquerda
         if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
         {
             validar = true;
@@ -453,7 +666,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         case cavaloP:
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
-            //Movimento para baixo e esquerda
+        //Movimento para baixo e esquerda
         if(lin_ori == lin_des - 1 && col_ori == col_des + 2)
         {
             validar = true;
@@ -880,7 +1093,7 @@ void movimento(int *tab, int rodada)
             printf("Informe a casa que você quer andar: ");
             lermovimento(&col_ori,&lin_ori);
             int peca = tab[lin_ori*8 + col_ori];
-            
+            printf("Você está movendo %s!\n", nomes[peca]);
             
             if(peca == quadradoB || peca == quadradoP)
             {
@@ -891,7 +1104,7 @@ void movimento(int *tab, int rodada)
                 cancelar = true;
                 break;
             }
-            else if(rodada%2 == 0 && verificapeca(tab, lin_ori, col_ori) > 8)
+            else if(rodada%2 == 0 && peca > 8)
             {
                 printf("Você tentou movimentar uma peça preta na vez das brancas, tente novamente!\n");
             }

@@ -225,8 +225,9 @@ int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
 
 int* peca_horizontal(int lin, int col, int *tab, int rei)
 {
+    int* pecas = malloc(sizeof(int) * 2);
+
     //Leitura das horizontais para ver se há alguma peça impedindo de chegar ao destino
-    int pecas[2];
        
     //Leitura da horizontal para direita ⮕
     for(int i=col+1;i<8;i++)
@@ -254,10 +255,11 @@ int* peca_horizontal(int lin, int col, int *tab, int rei)
 
     return pecas;
 }
-int peca_diagonal(int lin, int col, int *tab, int rei)
+int* peca_diagonal(int lin, int col, int *tab, int rei)
 {
+    int* pecas = malloc(sizeof(int) * 4);
+    
     //Ler as diagonais para ver se até o destino não há alguma peça impedindo a passagem
-    int pecas[4];
     
     //Movimento para baixo e esquerda ⬋
     for(int i = lin-1, j = col+1;i>=0 && j<8;i--,j++)
@@ -313,10 +315,11 @@ int peca_diagonal(int lin, int col, int *tab, int rei)
 
     return pecas;
 }
-int peca_vertical(int lin, int col, int *tab, int rei)
+int* peca_vertical(int lin, int col, int *tab, int rei)
 {
+    int* pecas = malloc(sizeof(int) * 2);
+
     //Leitura das verticais para ver se há alguma peça impedindo de chegar ao destino
-    int pecas[2];
 
     //Leitura da vertical para baixo ⬇
     for(int i=lin+1;i<8;i++)
@@ -342,9 +345,9 @@ int peca_vertical(int lin, int col, int *tab, int rei)
 
     return pecas;
 }
-int peca_cavalo(int lin, int col, int* tab)
+int* peca_cavalo(int lin, int col, int* tab)
 {
-    int pecas[8];
+    int* pecas = malloc(sizeof(int) * 8);
 
     //Movimento para baixo e esquerda
     if(tab[(lin-1)*8+(col+2)] == 3 || tab[(lin-1)*8+(col+2)] == 9)
@@ -394,7 +397,629 @@ int peca_cavalo(int lin, int col, int* tab)
     return pecas;
 }
 
+int verifica_ameaca_rei(int* horizontal, int* diagonal, int*vertical, int* cavalo, int rei)
+{
+    if(rei == reiB)
+    {
+        if(vertical[0]        ==  torreP || vertical[0]   == rainhaP)
+        {
+            return false;
+        }
+        else if(vertical[1]   ==  torreP || vertical[1]   == rainhaP)
+        {
+            return false;
+        }
+        else if(horizontal[0] ==  torreP || horizontal[0] == rainhaP)
+        {
+            return false;
+        }
+        else if(horizontal[1] ==  torreP || horizontal[1] == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP)
+        {
+            return false;
+        }
+        else if(diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP)
+        {
+            return false;
+        }
+        else if(cavalo[0]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[1]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[2]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[3]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[4]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[5]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[6]     ==  cavaloP)
+        {
+            return false;
+        }
+        else if(cavalo[7]     ==  cavaloP)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    if(rei == reiP)
+    {
+        if(vertical[0]        ==  torreB || vertical[0]   == rainhaB)
+        {
+            return false;
+        }
+        else if(vertical[1]   ==  torreB || vertical[1]   == rainhaB)
+        {
+            return false;
+        }
+        else if(horizontal[0] ==  torreB || horizontal[0] == rainhaB)
+        {
+            return false;
+        }
+        else if(horizontal[1] ==  torreB || horizontal[1] == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB)
+        {
+            return false;
+        }
+        else if(diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB)
+        {
+            return false;
+        }
+        else if(cavalo[0]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[1]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[2]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[3]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[4]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[5]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[6]     ==  cavaloB)
+        {
+            return false;
+        }
+        else if(cavalo[7]     ==  cavaloB)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+}
+int peao_protege(int lin,int col, int* tab, int peao)
+{
+    if(peao == peaoB)
+    {
+        if(tab[(lin-1)*8+(col-1)]>=8 && tab[(lin+1)*8+(col+1) == reiB])
+        {
+            return true;
+        }
+        else if(tab[(lin-1)*8+(col+1)]>=8 && tab[(lin+1)*8+(col-1)] == reiB)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if(peao == peaoP)
+    {
+        if(tab[(lin-1)*8+(col-1)]>=8 && tab[(lin+1)*8+(col+1) == reiP])
+        {
+            return true;
+        }
+        else if(tab[(lin-1)*8+(col+1)]>=8 && tab[(lin+1)*8+(col-1)] == reiP)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+int verifica_ameaca_servo(int lin, int col, int* tab, int peca)
+{
+    int rei;
+    if(peca > 1 && peca < 8)
+    {
+        rei = reiB;
+    }
+    else
+    {
+        rei = reiP;
+    }
 
+    int* diagonal = peca_diagonal(lin,col,tab,rei);
+    int* horizontal = peca_horizontal(lin,col,tab,rei);
+    int* vertical = peca_vertical(lin,col,tab,rei);
+
+    if(rei == reiB)
+    {
+        if(peca == torreB)
+        {
+            if((vertical[0]        ==  torreP || vertical[0]   == rainhaP) && vertical[1]   == reiB)
+            {
+                return Cima;
+            }
+            else if((vertical[1]   ==  torreP || vertical[1]   == rainhaP) && vertical[0]   == reiB)
+            {
+                return Baixo;
+            }
+            else if((horizontal[0] ==  torreP || horizontal[0] == rainhaP) && horizontal[1] == reiB)
+            {
+                return Direita;
+            }
+            else if((horizontal[1] ==  torreP || horizontal[1] == rainhaP) && horizontal[0] == reiB)
+            {
+                return Esquerda;
+            }
+            else if((diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP) && diagonal[2]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP) && diagonal[3]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP) && diagonal[0]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP) && diagonal[1]   == reiB)
+            {
+                return false;
+            }
+            else
+        {
+            return true;
+        }
+        }
+        else if(peca == peaoB)
+        {
+            if((vertical[0]        ==  torreP || vertical[0]   == rainhaP) && vertical[1]   == reiB)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreP || vertical[1]   == rainhaP) && vertical[0]   == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreP || horizontal[0] == rainhaP) && horizontal[1] == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreP || horizontal[1] == rainhaP) && horizontal[0] == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP) && diagonal[2]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP) && diagonal[3]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP) && diagonal[0]   == reiB)
+            {
+                if(peao_protege(lin,col, tab, peca))
+                {
+                    return DC_Direita;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if((diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP) && diagonal[1]   == reiB)
+            {
+                if(peao_protege(lin,col, tab, peca))
+                {
+                    return DC_Direita;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+        {
+            return true;
+        }
+        } 
+        else if(peca == bispoB)
+        {
+            if((vertical[0]        ==  torreP || vertical[0]   == rainhaP) && vertical[1]   == reiB)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreP || vertical[1]   == rainhaP) && vertical[0]   == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreP || horizontal[0] == rainhaP) && horizontal[1] == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreP || horizontal[1] == rainhaP) && horizontal[0] == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP) && diagonal[2]   == reiB)
+            {
+                return DB_Esquerda;
+            }
+            else if((diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP) && diagonal[3]   == reiB)
+            {
+                return DB_Direita;
+            }
+            else if((diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP) && diagonal[0]   == reiB)
+            {
+                return DC_Direita;
+            }
+            else if((diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP) && diagonal[1]   == reiB)
+            {
+                return DC_Esquerda;
+            }
+            else
+        {
+            return true;
+        }
+        }
+        else if(peca == rainhaB)
+        {
+            if((vertical[0]        ==  torreP || vertical[0]   == rainhaP) && vertical[1]   == reiB)
+            {
+                return Cima;
+            }
+            else if((vertical[1]   ==  torreP || vertical[1]   == rainhaP) && vertical[0]   == reiB)
+            {
+                return Baixo;
+            }
+            else if((horizontal[0] ==  torreP || horizontal[0] == rainhaP) && horizontal[1] == reiB)
+            {
+                return Direita;
+            }
+            else if((horizontal[1] ==  torreP || horizontal[1] == rainhaP) && horizontal[0] == reiB)
+            {
+                return Esquerda;
+            }
+            else if((diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP) && diagonal[2]   == reiB)
+            {
+                return DB_Esquerda;
+            }
+            else if((diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP) && diagonal[3]   == reiB)
+            {
+                return DB_Direita;
+            }
+            else if((diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP) && diagonal[0]   == reiB)
+            {
+                return DC_Direita;
+            }
+            else if((diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP) && diagonal[1]   == reiB)
+            {
+                return DC_Esquerda;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if((vertical[0]        ==  torreP || vertical[0]   == rainhaP) && vertical[1]   == reiB)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreP || vertical[1]   == rainhaP) && vertical[0]   == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreP || horizontal[0] == rainhaP) && horizontal[1] == reiB)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreP || horizontal[1] == rainhaP) && horizontal[0] == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP) && diagonal[2]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP) && diagonal[3]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP) && diagonal[0]   == reiB)
+            {
+                return false;
+            }
+            else if((diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP) && diagonal[1]   == reiB)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+    if(rei == reiP)
+    {
+        if(peca == torreP)
+        {
+            if((vertical[0]        ==  torreB || vertical[0]   == rainhaB) && vertical[1]   == reiP)
+            {
+                return Cima;
+            }
+            else if((vertical[1]   ==  torreB || vertical[1]   == rainhaB) && vertical[0]   == reiP)
+            {
+                return Baixo;
+            }
+            else if((horizontal[0] ==  torreB || horizontal[0] == rainhaB) && horizontal[1] == reiP)
+            {
+                return Direita;
+            }
+            else if((horizontal[1] ==  torreB || horizontal[1] == rainhaB) && horizontal[0] == reiP)
+            {
+                return Esquerda;
+            }
+            else if((diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB) && diagonal[2]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB) && diagonal[3]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB) && diagonal[0]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB) && diagonal[1]   == reiP)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else if(peca == peaoP)
+        {
+            if((vertical[0]        ==  torreB || vertical[0]   == rainhaB) && vertical[1]   == reiP)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreB || vertical[1]   == rainhaB) && vertical[0]   == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreB || horizontal[0] == rainhaB) && horizontal[1] == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreB || horizontal[1] == rainhaB) && horizontal[0] == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB) && diagonal[2]   == reiP && peao_protege(lin,col,tab,peca))
+            {
+                if(peao_protege(lin,col, tab, peca))
+                {
+                    return DB_Direita;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if((diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB) && diagonal[3]   == reiP && peao_protege(lin,col,tab,peca))
+            {
+                if(peao_protege(lin,col, tab, peca))
+                {
+                    return DB_Direita;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if((diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB) && diagonal[0]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB) && diagonal[1]   == reiP)
+            {
+                return false;
+            }
+            else
+        {
+            return true;
+        }
+        } 
+        else if(peca == bispoP)
+        {
+            if((vertical[0]        ==  torreB || vertical[0]   == rainhaB) && vertical[1]   == reiP)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreB || vertical[1]   == rainhaB) && vertical[0]   == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreB || horizontal[0] == rainhaB) && horizontal[1] == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreB || horizontal[1] == rainhaB) && horizontal[0] == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB) && diagonal[2]   == reiP)
+            {
+                return DB_Esquerda;
+            }
+            else if((diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB) && diagonal[3]   == reiP)
+            {
+                return DB_Direita;
+            }
+            else if((diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB) && diagonal[0]   == reiP)
+            {
+                return DC_Direita;
+            }
+            else if((diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB) && diagonal[1]   == reiP)
+            {
+                return DC_Esquerda;
+            }
+            else
+        {
+            return true;
+        }
+        }
+        else if(peca == rainhaP)
+        {
+            if((vertical[0]        ==  torreB || vertical[0]   == rainhaB) && vertical[1]   == reiP)
+            {
+                return Cima;
+            }
+            else if((vertical[1]   ==  torreB || vertical[1]   == rainhaB) && vertical[0]   == reiP)
+            {
+                return Baixo;
+            }
+            else if((horizontal[0] ==  torreB || horizontal[0] == rainhaB) && horizontal[1] == reiP)
+            {
+                return Direita;
+            }
+            else if((horizontal[1] ==  torreB || horizontal[1] == rainhaB) && horizontal[0] == reiP)
+            {
+                return Esquerda;
+            }
+            else if((diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB) && diagonal[2]   == reiP)
+            {
+                return DB_Esquerda;
+            }
+            else if((diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB) && diagonal[3]   == reiP)
+            {
+                return DB_Direita;
+            }
+            else if((diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB) && diagonal[0]   == reiP)
+            {
+                return DC_Direita;
+            }
+            else if((diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB) && diagonal[1]   == reiP)
+            {
+                return DB_Esquerda;
+            }
+            else
+        {
+            return true;
+        }
+        }
+        else
+        {
+            if((vertical[0]        ==  torreB || vertical[0]   == rainhaB) && vertical[1]   == reiP)
+            {
+                return false;
+            }
+            else if((vertical[1]   ==  torreB || vertical[1]   == rainhaB) && vertical[0]   == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[0] ==  torreB || horizontal[0] == rainhaB) && horizontal[1] == reiP)
+            {
+                return false;
+            }
+            else if((horizontal[1] ==  torreB || horizontal[1] == rainhaB) && horizontal[0] == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB) && diagonal[2]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB) && diagonal[3]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB) && diagonal[0]   == reiP)
+            {
+                return false;
+            }
+            else if((diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB) && diagonal[1]   == reiP)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+}
 
 int horizontal(int lin_ori, int col_ori, int col_des, int *tab)
 {
@@ -541,10 +1166,31 @@ int vertical(int lin_ori, int col_ori, int lin_des, int *tab)
 int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *tabuleiro)
 {
     bool validar = false;
+    int ameaca = verifica_ameaca_servo(lin_ori,col_ori,tabuleiro,peca);
+    int* diag = peca_diagonal(lin_des,col_des,tabuleiro,reiB);
+    int* horiz = peca_horizontal(lin_des,col_des,tabuleiro,reiB);
+    int* vert = peca_vertical(lin_des,col_des,tabuleiro,reiB);
+    int* cav = peca_cavalo(lin_des, col_des, tabuleiro);
 
     switch(peca)
     {
         case peaoP:
+        if(ameaca > 1)
+        {
+            if(ameaca == DB_Direita && lin_des == lin_ori + 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori + 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         //Movimento nas Diagonais
         if(lin_des == lin_ori+1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]<8 && tabuleiro[lin_des*8+col_des]>1)
         {
@@ -567,6 +1213,22 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case peaoB:
+        if(ameaca > 1)
+        {
+            if(ameaca == DC_Direita && lin_des == lin_ori - 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DC_Esquerda && lin_des == lin_ori - 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         //Movimento nas Diagonais
         if(lin_des == lin_ori-1 && (col_des == col_ori-1 || col_des == col_ori+1) && tabuleiro[lin_des*8+col_des]>=8)
         {
@@ -697,6 +1359,30 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoB:
+        if(ameaca > 1)
+        {
+            if(ameaca == DB_Direita && lin_des == lin_ori - 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori - 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Direita && lin_des == lin_ori + 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori + 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
         //Movimento para Diagonal Esquerda Baixo ⬋
@@ -735,6 +1421,30 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case bispoP:
+        if(ameaca > 1)
+        {
+            if(ameaca == DB_Direita && lin_des == lin_ori - 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori - 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Direita && lin_des == lin_ori + 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori + 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
         //Movimento para Diagonal Esquerda Baixo ⬋
@@ -773,6 +1483,30 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case torreB:
+        if(ameaca > 1)
+        {
+            if(ameaca == Direita && lin_ori == lin_des && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == Esquerda && lin_ori == lin_des && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Cima && col_ori == col_des && lin_des == lin_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Baixo && col_ori == col_des && lin_des == lin_ori + 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
         {
             //Movimento para Cima ⬆
@@ -817,6 +1551,30 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case torreP:
+        if(ameaca > 1)
+        {
+            if(ameaca == Direita && lin_ori == lin_des && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == Esquerda && lin_ori == lin_des && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Cima && col_ori == col_des && lin_des == lin_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Baixo && col_ori == col_des && lin_des == lin_ori + 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] < 8)
         {
             //Movimento para Cima ⬆
@@ -857,6 +1615,46 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaB:
+        if(ameaca > 1)
+        {
+            if(ameaca == DB_Direita && lin_des == lin_ori - 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori - 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Direita && lin_des == lin_ori + 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori + 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Direita && lin_ori == lin_des && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == Esquerda && lin_ori == lin_des && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Cima && col_ori == col_des && lin_des == lin_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Baixo && col_ori == col_des && lin_des == lin_ori + 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] <= 1 || tabuleiro[lin_des*8+col_des] >= 8)
             {
                 //Movimento para Cima ⬆
@@ -932,6 +1730,46 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case rainhaP:
+        if(ameaca > 1)
+        {
+            if(ameaca == DB_Direita && lin_des == lin_ori - 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori - 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Direita && lin_des == lin_ori + 1 && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == DB_Esquerda && lin_des == lin_ori + 1 && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Direita && lin_ori == lin_des && col_des == col_ori + 1)
+            {
+                return true;
+            }
+            else if(ameaca == Esquerda && lin_ori == lin_des && col_des == col_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Cima && col_ori == col_des && lin_des == lin_ori - 1)
+            {
+                return true;
+            }
+            else if(ameaca == Baixo && col_ori == col_des && lin_des == lin_ori + 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         if(tabuleiro[lin_des*8+col_des] < 8)
             {
                 //Movimento para Cima ⬆
@@ -1007,73 +1845,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiB:
-
-        int* diagonal = peca_diagonal(lin_des,col_des,tabuleiro,reiB);
-        int* horizontal = peca_horizontal(lin_des,col_des,tabuleiro,reiB);
-        int* vertical = peca_vertical(lin_des,col_des,tabuleiro,reiB);
-        int* cavalo = peca_cavalo(lin_des, col_des, tabuleiro);
-
-        if(vertical[0]        ==  torreP || vertical[0]   == rainhaP)
-        {
-            return false;
-        }
-        else if(vertical[1]   ==  torreP || vertical[1]   == rainhaP)
-        {
-            return false;
-        }
-        else if(horizontal[0] ==  torreP || horizontal[0] == rainhaP)
-        {
-            return false;
-        }
-        else if(horizontal[1] ==  torreP || horizontal[1] == rainhaP)
-        {
-            return false;
-        }
-        else if(diagonal[0]   ==  bispoP || diagonal[0]   == rainhaP)
-        {
-            return false;
-        }
-        else if(diagonal[1]   ==  bispoP || diagonal[1]   == rainhaP)
-        {
-            return false;
-        }
-        else if(diagonal[2]   ==  bispoP || diagonal[2]   == rainhaP)
-        {
-            return false;
-        }
-        else if(diagonal[3]   ==  bispoP || diagonal[3]   == rainhaP)
-        {
-            return false;
-        }
-        else if(cavalo[0]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[1]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[2]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[3]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[4]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[5]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[6]     ==  cavaloP)
-        {
-            return false;
-        }
-        else if(cavalo[7]     ==  cavaloP)
+        if(!verifica_ameaca_rei(horiz,diag,vert,cav,reiB))
         {
             return false;
         }
@@ -1132,73 +1904,7 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         case reiP:
-
-        int* diagonal = peca_diagonal(lin_des,col_des,tabuleiro,reiB);
-        int* horizontal = peca_horizontal(lin_des,col_des,tabuleiro,reiB);
-        int* vertical = peca_vertical(lin_des,col_des,tabuleiro,reiB);
-        int* cavalo = peca_cavalo(lin_des, col_des, tabuleiro);
-
-        if(vertical[0]        ==  torreB || vertical[0]   == rainhaB)
-        {
-            return false;
-        }
-        else if(vertical[1]   ==  torreB || vertical[1]   == rainhaB)
-        {
-            return false;
-        }
-        else if(horizontal[0] ==  torreB || horizontal[0] == rainhaB)
-        {
-            return false;
-        }
-        else if(horizontal[1] ==  torreB || horizontal[1] == rainhaB)
-        {
-            return false;
-        }
-        else if(diagonal[0]   ==  bispoB || diagonal[0]   == rainhaB)
-        {
-            return false;
-        }
-        else if(diagonal[1]   ==  bispoB || diagonal[1]   == rainhaB)
-        {
-            return false;
-        }
-        else if(diagonal[2]   ==  bispoB || diagonal[2]   == rainhaB)
-        {
-            return false;
-        }
-        else if(diagonal[3]   ==  bispoB || diagonal[3]   == rainhaB)
-        {
-            return false;
-        }
-        else if(cavalo[0]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[1]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[2]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[3]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[4]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[5]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[6]     ==  cavaloB)
-        {
-            return false;
-        }
-        else if(cavalo[7]     ==  cavaloB)
+        if(!verifica_ameaca_rei(horiz,diag,vert,cav,reiP))
         {
             return false;
         }
@@ -1257,6 +1963,10 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
     }
    
+    free(diag);
+    free(cav);
+    free(vert);
+    free(horiz);
     return validar;
 }
 
@@ -1308,27 +2018,38 @@ void movimento(int *tab, int rodada)
             printf("Informe a casa que você quer andar: ");
             lermovimento(&col_ori,&lin_ori);
             int peca = tab[lin_ori*8 + col_ori];
-            printf("Você está movendo %s!\n", nomes[peca]);
-            
+
             if(peca == quadradoB || peca == quadradoP)
             {
                 printf("Você não pode movimentar uma casa vazia! Tente novamente.\n");
+                continue;
             }
             else if(lin_ori == -1 && col_ori == -1)
             {
                 cancelar = true;
                 break;
             }
-            else if(rodada%2 == 0 && peca > 8)
+            else if(!verifica_ameaca_servo(lin_ori,col_ori,tab,peca))
+            {
+                printf("Você não pode mover uma peça que protege o rei!");
+                continue;
+            }
+            else if(rodada%2 == 0 && peca < 8)
             {
                 printf("Você tentou movimentar uma peça preta na vez das brancas, tente novamente!\n");
+                continue;
             }
-            else if(rodada%2 > 0 && verificapeca(tab, lin_ori, col_ori) < 8)
+            else if(rodada%2 != 0 && peca >= 8)
             {
                 printf("Você tentou movimentar uma peça branca na vez das pretas, tente novamente!\n");
+                continue;
             }
             else
-            validar = false;
+            {
+                validar = false;
+            }
+            printf("Você está movendo %s!\n", nomes[peca]);
+            
         }
 
         if(cancelar)

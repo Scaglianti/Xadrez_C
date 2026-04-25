@@ -2034,12 +2034,12 @@ void movimento(int *tab, int rodada)
                 printf("Você não pode mover uma peça que protege o rei!");
                 continue;
             }
-            else if(rodada%2 == 0 && peca < 8)
+            else if(rodada%2 == 0 && peca >= 8)
             {
                 printf("Você tentou movimentar uma peça preta na vez das brancas, tente novamente!\n");
                 continue;
             }
-            else if(rodada%2 != 0 && peca >= 8)
+            else if(rodada%2 != 0 && peca < 8)
             {
                 printf("Você tentou movimentar uma peça branca na vez das pretas, tente novamente!\n");
                 continue;

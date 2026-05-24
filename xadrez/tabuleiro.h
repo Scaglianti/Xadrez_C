@@ -30,6 +30,12 @@ typedef enum
     DB_Direita
 
 }direcao;
+typedef enum{
+    RCPreto,
+    RLPreto,
+    RCBranco,
+    RLBranco
+}Roques;
 extern const char* nomes[];
 
 int cores(int col,int lin);

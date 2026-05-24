@@ -8,6 +8,7 @@ static int RLP = true;
 static int RCB = true;
 static int RLB = true;
 
+
 const char* nomes[] =
 {
     "",
@@ -28,6 +29,7 @@ const char* nomes[] =
 
 void libera(int* n1,int* n2,int *n3, int*n4)
 {
+    //Função para liberar mais facilmente
     free(n1);
     free(n2);
     free(n3);
@@ -152,6 +154,7 @@ int *criartabuleiro()
 
 int verificadirecao(int lin_ori, int col_ori, int lin_des, int col_des)
 {
+    //Função criada para a rainha. Irá verificar se o movimento é válido para horizontal ou vertical
     if(lin_ori == lin_des)
     {
         if(col_ori < col_des)
@@ -237,9 +240,37 @@ int verificadiagonal(int lin_ori, int col_ori, int lin_des, int col_des)
     return false; 
 }
 
+void modifica_tabuleiro_roque(int* tab, int roq)
+{
+    int cor;
+    if(roq == RCBranco)
+    {
+        cor = cores(7,7);
+        tab[7*8+5] = torreB;
+        tab[7*8+7] = cor;
+    }
+    else if(roq == RLBranco)
+    {
+        cor = cores(0,7);
+        tab[7*8+3] = torreB;
+        tab[7*8] = cor;
+    }
+    else if(roq == RCPreto)
+    {
+        cor = cores(7,0);
+        tab[5] = torreP;
+        tab[7] = cor;
+    }
+    else if(roq == RLPreto)
+    {
+        cor = cores(0,0);
+        tab[3] = torreP;
+        tab[0] = cor;
+    }
+}
 int verifica_roque(int lin_ori,int lin_des, int col_ori, int col_des, int*tab, int rei)
 {
-    if(reiB)
+    if(rei == reiB)
     {
         if(lin_ori == 7 && col_ori == 4)
         {
@@ -259,7 +290,7 @@ int verifica_roque(int lin_ori,int lin_des, int col_ori, int col_des, int*tab, i
         else
         return false;
     }
-    else if(reiP)
+    else if(rei == reiP)
     {
         if(lin_ori == 0 && col_ori == 4)
         {
@@ -311,6 +342,7 @@ int roque(int lin_ori,int col_ori, int lin_des, int col_des, int* tab, int rei)
                     int* cavRC2 = peca_cavalo(lin_des, 6, tab);
                     if(RCB == true && verifica_ameaca_rei(horizRC1,diagRC1,vertRC1,cavRC1,reiB) && verifica_ameaca_rei(horizRC2,diagRC2,vertRC2,cavRC2,reiB))
                     {
+                        modifica_tabuleiro_roque(tab,RCBranco);
                         RLB = false;
                         RCB = false;
                         libera(diagRC1,horizRC1,vertRC1,cavRC1);
@@ -337,6 +369,7 @@ int roque(int lin_ori,int col_ori, int lin_des, int col_des, int* tab, int rei)
                     int* cavRL2 = peca_cavalo(lin_des, 2, tab);
                     if(RLB == true && verifica_ameaca_rei(horizRL1,diagRL1,vertRL1,cavRL1,reiB) && verifica_ameaca_rei(horizRL2,diagRL2,vertRL2,cavRL2,reiB))
                     {
+                        modifica_tabuleiro_roque(tab,RLBranco);
                         RCB = false;
                         RLB = false;
                         libera(diagRL1,horizRL1,vertRL1,cavRL1);
@@ -388,6 +421,7 @@ int roque(int lin_ori,int col_ori, int lin_des, int col_des, int* tab, int rei)
 
                     if(RCP == true && verifica_ameaca_rei(horizRC1,diagRC1,vertRC1,cavRC1,reiP) && verifica_ameaca_rei(horizRC2,diagRC2,vertRC2,cavRC2,reiP))
                     {
+                        modifica_tabuleiro_roque(tab,RCPreto);
                         libera(diagRC1,horizRC1,vertRC1,cavRC1);
                         libera(diagRC2,horizRC2,vertRC2,cavRC2);
                         RLP = false;
@@ -414,6 +448,7 @@ int roque(int lin_ori,int col_ori, int lin_des, int col_des, int* tab, int rei)
                     int* cavRL2 = peca_cavalo(lin_des, 2, tab);
                     if(RLP == true && verifica_ameaca_rei(horizRL1,diagRL1,vertRL1,cavRL1,reiP) && verifica_ameaca_rei(horizRL2,diagRL2,vertRL2,cavRL2,reiP))
                     {
+                        modifica_tabuleiro_roque(tab,RLPreto);
                         RCP = false;
                         RLP = false;
                         libera(diagRL1,horizRL1,vertRL1,cavRL1);
@@ -443,6 +478,22 @@ int roque(int lin_ori,int col_ori, int lin_des, int col_des, int* tab, int rei)
     return false;
 }
 
+int reis(int peca)
+{
+    //Função para retornar o valor do rei (Preto ou Branco) que está atuando no momento
+    if(peca > 1 && peca < 8)
+    {
+        return reiB;
+    }
+    else if(peca >= 8)
+    {
+        return reiP;
+    }
+    else
+    {
+        return false;
+    }
+}
 int* peca_horizontal(int lin, int col, int *tab, int rei)
 {
     int* pecas = malloc(sizeof(int) * 2);
@@ -487,6 +538,7 @@ int* peca_diagonal(int lin, int col, int *tab, int rei)
         if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
             pecas[0] = tab[i*8+j];
+            break;
         }
         else
         {
@@ -500,6 +552,7 @@ int* peca_diagonal(int lin, int col, int *tab, int rei)
         if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
             pecas[1] = tab[i*8+j];
+            break;
         }
         else
         {
@@ -513,6 +566,7 @@ int* peca_diagonal(int lin, int col, int *tab, int rei)
         if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
             pecas[2] = tab[i*8+j];
+            break;
         }
         else
         {
@@ -526,6 +580,7 @@ int* peca_diagonal(int lin, int col, int *tab, int rei)
         if(tab[i*8+j]>1 && tab[i*8+j] != rei)
         {
             pecas[3] = tab[i*8+j];
+            break;
         }
         else
         {
@@ -547,6 +602,7 @@ int* peca_vertical(int lin, int col, int *tab, int rei)
         if(tab[i*8+col]>1 && tab[i*8+col] != rei)
         {
             pecas[0] = tab[i*8+col];
+            break;
         }
         else
         pecas[0] = false;
@@ -558,6 +614,7 @@ int* peca_vertical(int lin, int col, int *tab, int rei)
         if(tab[i*8+col]>1 && tab[i*8+col] != rei)
         {
             pecas[1] = tab[i*8+col];
+            break;
         }
         else
             pecas[1] = false;
@@ -594,6 +651,7 @@ int* peca_cavalo(int lin, int col, int* tab)
 
 int verifica_ameaca_rei(int* horizontal, int* diagonal, int*vertical, int* cavalo, int rei)
 {
+    //Função para identificar um possível check, não deixando o rei se movimentar para a posição caso necessário
     if(rei == reiB)
     {
         if(vertical[0]        ==  torreP || vertical[0]   == rainhaP)
@@ -741,6 +799,7 @@ int verifica_ameaca_rei(int* horizontal, int* diagonal, int*vertical, int* caval
 }
 int peao_protege(int lin,int col, int* tab, int peao)
 {
+    //Função específica para o peão na sua função de proteger o rei num possível check
     if(peao == peaoB)
     {
         if(tab[(lin-1)*8+(col-1)]>=8 && tab[(lin+1)*8+(col+1)] == reiB)
@@ -778,6 +837,8 @@ int peao_protege(int lin,int col, int* tab, int peao)
 }
 int verifica_ameaca_servo(int lin, int col, int* tab, int peca)
 {
+    //Função para as peças que protegem o rei
+    //Permitem as peças se moverem caso possam defender o rei se colocando como escudo ou, se possível, matarem a peça que ameaça o rei 
     int rei;
     if(peca > 1 && peca < 8)
     {
@@ -1811,31 +1872,79 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             //Movimento para Cima ⬆
             if(col_ori == col_des && lin_ori == lin_des + 1)
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             //Movimento para Direita ⮕
             else if(col_ori == col_des - 1 && lin_ori == lin_des)
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             //Movimento para Baixo ⬇
             else if(col_ori == col_des && lin_ori == lin_des - 1)
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             //Movimento para Esquerda ⬅
             else if(col_ori == col_des + 1 && lin_ori == lin_des)
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             //Movimento para as Verticais distantes
             else if(col_ori == col_des && (lin_ori < lin_des || lin_ori > lin_des) && vertical(lin_ori, col_ori, lin_des, tabuleiro))
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             //Movimento para as Horizontais distantes
             else if(lin_ori == lin_des && (col_ori < col_des || col_ori > col_des) && horizontal(lin_ori, col_ori, col_des, tabuleiro))
             {
+                if(lin_ori == 7 && col_ori == 0)
+                {
+                    RLB = false;
+                }
+                else if(lin_ori == 7 && col_ori == 7)
+                {
+                    RCB = false;
+                }
                 validar = true;
             }
             else
@@ -1880,37 +1989,89 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
             //Movimento para Cima ⬆
             if(col_ori == col_des && lin_ori == lin_des + 1)
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             //Movimento para Direita ⮕
             else if(col_ori == col_des - 1 && lin_ori == lin_des)
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             //Movimento para Baixo ⬇
             else if(col_ori == col_des && lin_ori == lin_des - 1)
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             //Movimento para Esquerda ⬅
             else if(col_ori == col_des + 1 && lin_ori == lin_des)
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             //Movimento para as Verticais distantes
             else if(col_ori == col_des && (lin_ori < lin_des || lin_ori > lin_des) && vertical(lin_ori, col_ori, lin_des, tabuleiro))
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             //Movimento para as Horizontais distantes
             else if(lin_ori == lin_des && (col_ori < col_des || col_ori > col_des) && horizontal(lin_ori, col_ori, col_des, tabuleiro))
             {
+                if(lin_ori == 0 && col_ori == 0)
+                {
+                    RLP = false;
+                }
+                else if(lin_ori == 0 && col_ori == 7)
+                {
+                    RCP = false;
+                }
                 validar = true;
             }
             else
             {
                 return false;
             }
+        }
+        else
+        {
+            return false;
         }  
         break;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2275,7 +2436,6 @@ int sistema(int peca, int col_ori, int lin_ori, int lin_des, int col_des, int *t
         break;
     }
    
-    libera(diag,horiz,vert,cav);
     return validar;
 }
 
@@ -2366,8 +2526,8 @@ void movimento(int *tab, int rodada)
             else
             {
                 validar = false;
+                printf("Você está movendo %s!\n", nomes[peca]);
             }
-            printf("Você está movendo %s!\n", nomes[peca]);
             
         }
 
@@ -2385,27 +2545,26 @@ void movimento(int *tab, int rodada)
             printf("Informe a casa para onde você quer andar: ");
             lermovimento(&col_des,&lin_des);
             int peca = tab[lin_ori*8 + col_ori];
-            
-            int* diag = peca_diagonal(lin_des,col_des,tab,reiB);
-            int* horiz = peca_horizontal(lin_des,col_des,tab,reiB);
-            int* vert = peca_vertical(lin_des,col_des,tab,reiB);
+            int rei = reis(peca);
+            int* diag = peca_diagonal(lin_des,col_des,tab,rei);
+            int* horiz = peca_horizontal(lin_des,col_des,tab,rei);
+            int* vert = peca_vertical(lin_des,col_des,tab,rei);
             int* cav = peca_cavalo(lin_des, col_des, tab);
 
             int resultado_sistema = sistema(peca, col_ori, lin_ori, lin_des, col_des, tab);
-            int resultado_rei = verifica_ameaca_rei(horiz, diag, vert, cav, reiB);
+            int resultado_rei = verifica_ameaca_rei(horiz, diag, vert, cav, rei);
 
             if(lin_des == -1 && col_des == -1)
             {
-                libera(diag,horiz,vert,cav);
                 cancelar = true;
-                break;
+                validar = false;
             }
             else if(!resultado_sistema)
             {
                 printf("\n---------Aviso---------\n");
                 printf("Ação inválida!! Tente novamente.\n");
-                printf("Funcão verifica roque: %d\n",verifica_roque(lin_ori,lin_des,col_ori,col_des,tab,reiB));
-                printf("Funcão roque: %d\n", roque(lin_ori,col_ori,lin_des,col_des,tab,reiB));
+                printf("Funcão verifica roque: %d\n",verifica_roque(lin_ori,lin_des,col_ori,col_des,tab,rei));
+                printf("Funcão roque: %d\n", roque(lin_ori,col_ori,lin_des,col_des,tab,rei));
                 printf("Funcão verifica ameaça rei: %d\n",resultado_rei);
             }
             else
